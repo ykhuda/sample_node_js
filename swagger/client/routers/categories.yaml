@@ -1,0 +1,54 @@
+list:
+  get:
+    tags:
+      - Cards
+    summary: >-
+      Get category list
+    description: >-
+      Get category list
+    operationId: list_categories
+    security:
+      - {}
+      - uidKey: []
+    responses:
+      '200':
+        description: category list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                categories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 27
+                      name:
+                        type: string
+                        example: Customizable Cards
+                      checked:
+                        type: boolean
+                      taxonomy:
+                        type: string
+                        example: CUSTOMIZED
+                      icon:
+                        type: string
+                        nullable: true
+                      slug:
+                        type: string
+                        example: custom_cards
+                      meta_title:
+                        type: string
+                        example: Customizable Cards
+                      meta_description:
+                        type: string
+                        example: Customizable Cards

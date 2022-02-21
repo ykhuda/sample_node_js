@@ -1,0 +1,117 @@
+id:
+  get:
+    summary: Get a mail by id.
+    tags:
+      - User Mail
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    coutry:
+                      $ref: '../_schemas.yaml#/userMail'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a mail by id.
+    tags:
+      - User Mail
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/userMail'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - User Mail has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a mail by id.
+    tags:
+      - User Mail
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - User Mail with id :id has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+userMails:
+  get:
+    summary: Get all user mails.
+    tags:
+      - User Mail
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/userMail'
+                    page:
+                      type: integer
+                    total:
+                      type: integer'
+resend:
+  put:
+    summary: Resend a user's mail.
+    tags:
+      - User Mail
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Resent.

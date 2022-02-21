@@ -1,0 +1,769 @@
+userCookies:
+  in: cookie
+  name: user
+  schema:
+    type: object
+    required: true
+    properties:
+      id:
+        type: integer
+      login:
+        type: string
+      password:
+        type: string
+      model:
+        type: string
+idParam:
+  type: integer
+  name: id
+  in: path
+  required: true
+  description: Model id
+idArray:
+  type: array
+  items:
+    type: integer
+orderIds:
+  type: string
+  name: orderIds
+  in: query
+  required: true
+qaOrderArray:
+  type: array
+  items:
+    id:
+      type: integer
+  example:
+    - 40031
+    - 40030
+    - 40059
+imageFile:
+  type: object
+  properties:
+    name:
+      type: string
+    size:
+      type: integer
+    thumbUrl:
+      type: string
+      format: byte
+    status:
+      type: string
+      enum:
+        - removed
+  required:
+    - name
+    - thumbUrl
+ttfFile:
+  type: object
+  properties:
+    name:
+      type: string
+    size:
+      type: integer
+    buffer:
+      type: string
+      format: binary
+    status:
+      type: string
+      enum:
+        - removed
+  required:
+    - name
+    - buffer
+batchCards:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    cnt:
+      type: integer
+    taxonomy:
+      type: string
+    category_id:
+      type: integer
+    closed_width:
+      type: number
+      format: float
+    closed_height:
+      type: number
+      format: float
+addressTo:
+  type: object
+  properties:
+    type:
+      type: string
+      enum:
+        - order_to
+    name:
+      type: string
+    country_id:
+      type: integer
+addressFrom:
+  type: object
+  properties:
+    type:
+      type: string
+      enum:
+        - order_from
+    name:
+      type: string
+    country_id:
+      type: integer
+ordersByCardId:
+  type: array
+  items:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          name:
+            type: string
+          id:
+            type: integer
+      ups_shipments:
+        type: object
+        properties:
+          id:
+            type: integer
+      denomination:
+        type: object
+        properties:
+          nominal:
+            type: number
+            format: float
+          id:
+            type: integer
+          gcard:
+            type: object
+            properties:
+              name:
+                type: string
+      inserts:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            price:
+              type: number
+              format: float
+            name:
+              type: string
+        to:
+          $ref: '#/addressTo'
+        from:
+          $ref: '#/addressFrom'
+        children:
+          type: array
+          items:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+              denomination:
+                type: object
+                properties:
+                  nominal:
+                    type: number
+                    format: float
+                  id:
+                    type: integer
+                  gcard:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+              inserts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    price:
+                      type: number
+                      format: float
+                    name:
+                      type: string
+                    to:
+                      $ref: '#/addressTo'
+                    from:
+                      $ref: '#/addressFrom'
+message:
+  type: object
+  properties:
+    type:
+      type: string
+      enum:
+        - info
+        - error
+        - warning
+    message:
+      type: string
+      enum:
+        - 'Warning! The following orders were not attached to the employee, as either they are already attached to another employee or do not exist: :ids'
+        - No orders available to be processed!
+        - Please complete or discard current orders before taking more orders
+        - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+### Models
+
+# Address
+address:
+  type: object
+  properties:
+    type:
+      type: string
+    user_id:
+      type: integer
+    order_id:
+      type: integer
+    date_updated:
+      type: string
+      format: date-time
+    basket_id:
+      type: integer
+    country:
+      type: string
+    country_id:
+      type: integer
+    birthday:
+      type: string
+    address_id:
+      type: integer
+    ext_id:
+      type: integer
+# Category
+category:
+  type: object
+  properties:
+    checked:
+      type: integer
+    is_custom:
+      type: integer
+    icon:
+      type: string
+    slug:
+      type: string
+    meta_title:
+      type: string
+    meta_description:
+      type: string
+    taxonomy:
+      type: string
+    name:
+      type: string
+# User Group
+userGroup:
+  type: object
+  properties:
+    limit_categories:
+      type: integer
+    title:
+      type: string
+# Country
+country:
+  type: object
+  properties:
+    aliases:
+      type: string
+    name:
+      type: string
+    delivery_cost:
+      type: number
+      format: float
+# User Mail
+userMail:
+  type: object
+  properties:
+    id:
+      type: integer
+    user_id:
+      type: integer
+    date_created:
+      type: string
+      format: date-time
+    type:
+      type: integer
+    subject:
+      type: string
+    message:
+      type: string
+    htmlmessage:
+      type: string
+    order_id:
+      type: integer
+    sent:
+      type: integer
+# Denominatoin
+denomination:
+  type: object
+  properties:
+    active:
+      type: integer
+    gcard_id:
+      type: integer
+    nominal:
+      type: number
+      format: float
+    price:
+      type: number
+      format: float
+# Holiday
+holiday:
+  type: object
+  properties:
+    date:
+      type: string
+      format: date
+# Tax Codes
+taxCode:
+  type: object
+  properties:
+    name:
+      type: string
+    tax_code:
+      type: string
+# Discount Codes
+discountCode:
+  type: object
+  properties:
+    credit:
+      type: integer
+      format: float
+    count:
+      type: integer
+    group_id:
+      type: integer
+    type:
+      type: string
+      enum:
+        - normal
+        - cards_only
+    invoiced:
+      type: integer
+    users_limit:
+      type: integer
+    domain_regex:
+      type: string
+    code:
+      type: string
+# Discount Rules
+discountRule:
+  type: object
+  properties:
+    user_group_id:
+      type: integer
+    min_number:
+      type: integer
+    discount:
+      type: integer
+# Share Options
+shareOption:
+  type: object
+  properties:
+    name:
+      type: string
+    text:
+      type: string
+    link:
+      type: string
+    link_android:
+      type: string
+# Coupons
+coupon:
+  type: object
+  properties:
+    code:
+      type: string
+    credit:
+      type: number
+      format: float
+    used:
+      type: integer
+    expiration_date:
+      type: string
+      format: date-time
+# Twilio Request
+twilioRequest:
+  type: object
+  properties:
+    phone:
+      type: string
+    request:
+      type: string
+    created_at:
+      type: string
+      format: date-time
+    request_ip:
+      type: string
+    carrier_name:
+      type: string
+# Gift Card + Image:
+giftCardImg:
+  type: object
+  properties:
+    name:
+      type: string
+    file:
+      $ref: '#/imageFile'
+# Gift Card:
+giftCard:
+  type: object
+  properties:
+    name:
+      type: string
+  required:
+    - name
+# Font + File
+fontFile:
+  type: object
+  properties:
+    font_file:
+      $ref: '#/ttfFile'
+    image:
+      $ref: '#/imageFile'
+    font_eot_file:
+      $ref: '#/ttfFile'
+    user_groups:
+      $ref: '#/idArray'
+    label:
+      type: string
+    sort:
+      type: integer
+    visible:
+      type: integer
+    line_spacing:
+      type: number
+      format: float
+    font_name:
+      type: string
+# Font
+font:
+  type: object
+  properties:
+    id:
+      type: integer
+    user_groups:
+      $ref: '#/userGroup'
+# Subscriptions UPDATE
+subscriptionsUpdate:
+  type: object
+  properties:
+    status:
+      type: string
+      enum:
+        - ACTIVE
+        - DRAFT
+    sort:
+      type: integer
+    employee_id:
+      type: integer
+    updated_at:
+      type: string
+      format: date-time
+    created_at:
+      type: string
+      format: date-time
+    name:
+      type: string
+    period:
+      type: integer
+    is_best_value:
+      type: integer
+    description:
+      type: string
+    plan_icon:
+      type: string
+    color:
+      type: string
+    cost_description:
+      type: string
+    taxable_amount:
+      type: number
+      format: float
+    tax_exempt:
+      type: integer
+    fee:
+      type: number
+      format: float
+    credit2:
+      type: number
+      format: float
+    discount:
+      type: number
+      format: float
+# Subscriptions GET
+subscriptionsGet:
+  type: object
+  properties:
+    status:
+      type: string
+      enum:
+        - ACTIVE
+        - DRAFT
+    sort:
+      type: integer
+    name:
+      type: string
+    period:
+      type: integer
+    is_best_value:
+      type: integer
+    description:
+      type: string
+    plan_icon:
+      type: string
+    color:
+      type: string
+    cost_description:
+      type: string
+    taxable_amount:
+      type: number
+      format: float
+    tax_exempt:
+      type: integer
+    fee:
+      type: number
+      format: float
+    credit2:
+      type: number
+      format: float
+    discount:
+      type: number
+      format: float
+# Social Sharing
+socialSharing:
+  type: object
+  properties:
+    user_id:
+      type: integer
+    network:
+      type: string
+    request_ip:
+      type: string
+# Notificaiton GET
+notificationGet:
+  type: object
+  properties:
+    message:
+      type: string
+    color:
+      type: string
+      enum:
+        - RED
+        - GREEN
+    employee_id:
+      type: integer
+    status:
+      type: string
+      enum:
+        - ACTIVE
+        - DRAFT
+    visible_to_all:
+      type: integer
+    visible_to_guest:
+      type: integer
+    starts_at:
+      type: string
+      format: date-time
+    ends_at:
+      type: string
+      format: date-time
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time
+# Notification Update
+notificationUpdate:
+  type: object
+  properties:
+    message:
+      type: string
+    color:
+      type: string
+      enum:
+        - RED
+        - GREEN
+    status:
+      type: string
+      enum:
+        - ACTIVE
+        - DRAFT
+    visible_to_all:
+      type: integer
+    visible_to_guest:
+      type: integer
+    starts_at:
+      type: string
+      format: date-time
+    ends_at:
+      type: string
+      format: date-time
+    user_groups:
+      $ref: '#/idArray'
+# Templates
+template:
+  type: object
+  properties:
+    user_id:
+      type: integer
+    category_id:
+      type: integer
+    status:
+      type: integer
+    name:
+      type: string
+    message:
+      type: string
+    wishes:
+      type: string
+    signature_id:
+      type: integer
+    signature2_id:
+      type: integer
+    user_groups:
+      type: array
+      items:
+        - id:
+            type: integer
+        - name:
+            type: string
+        - value:
+            type: boolean
+    template_category:
+      type: object
+      properties:
+        name:
+          type: string
+methodsCreate:
+  type: object
+  properties:
+    method_name:
+      type: string
+      example: DO NOT STAMP. SEAL AND SHIP
+    method_label:
+      type: string
+      example: Written, addressed, stuffed, sealed
+    discount:
+      type: string
+      example: $0.10
+    add_postage_fee:
+      type: integer
+      enum:
+        - 1
+        - 0
+    show_options:
+      type: integer
+      enum:
+        - 1
+        - 0
+    status:
+      type: integer
+      enum:
+        - 1
+        - 0
+    check_recipient_address:
+      type: integer
+      enum:
+        - 1
+        - 0
+    check_return_address:
+      type: integer
+      enum:
+        - 1
+        - 0
+NewMethods:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 1
+    method_name:
+      type: string
+      example: DO NOT STAMP. SEAL AND SHIP
+    method_label:
+      type: string
+      example: Written, addressed, stuffed, sealed
+    discount:
+      type: string
+      example: $0.10
+    add_postage_fee:
+      type: integer
+      enum:
+        - 1
+        - 0
+    show_options:
+      type: integer
+      enum:
+        - 1
+        - 0
+    status:
+      type: integer
+      enum:
+        - 1
+        - 0
+    check_recipient_address:
+      type: integer
+      enum:
+        - 1
+        - 0
+    check_return_address:
+      type: integer
+      enum:
+        - 1
+        - 0
+NewRates:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 1
+    name:
+      type: string
+      example: Ground
+    base:
+      type: integer
+      example: $10
+    per_card_fee:
+      type: string
+      example: $0.10
+    minimum_fee:
+      type: integer
+      example: $10
+    sort_order:
+      type: integer
+      enum:
+        - 1
+        - 0
+rateCreate:
+  type: object
+  properties:
+    name:
+      type: string
+      example: Ground
+    base:
+      type: integer
+      example: $10
+    per_card_fee:
+      type: string
+      example: $0.10
+    minimum_fee:
+      type: integer
+      example: $10
+    sort_order:
+      type: integer
+      enum:
+        - 1
+        - 0

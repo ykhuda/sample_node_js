@@ -1,0 +1,584 @@
+paid:
+  get:
+    summary: Find grouped orders by card id.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      $ref: '../_schemas.yaml#/batchCards'
+generatePdf:
+  get:
+    summary: Generate a card images in PDF by id.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/pdf200b64'
+      '404':
+        description: NOT FOUND
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 404
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                   - Card with id (:id) doesn't exist.
+                   - Сould not get front image.
+                   - Сould not copy front image.
+                   - Сould not copy back image.
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Size of card is not set.
+manifest:
+  get:
+    summary: Generate a manifest.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+      - orderIds:
+          $ref: '../_schemas.yaml#/orderIds'
+      - isNewManifest:
+          type: boolean
+          in: query
+          name: isNewManifest
+      - cut:
+          type: boolean
+          name: cut
+          in: query
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/pdf200b64'
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - No orders.
+                    - Cannot find img for card with id (:card_id)
+                    - Forced to update old Manifest, but there is no manifest with status "new".
+in_work:
+  get:
+    summary: Find all orders with status 'in_work'.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rows:
+                  type: object
+                  properties:
+                    count:
+                      type: integer
+                    countOrdersWithLabels:
+                      type: integer
+                    ordersInWork:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          card:
+                            $ref: '../_schemas.yaml#/batchCards'
+                          orders:
+                            $ref: '../_schemas.yaml#/ordersByCardId'
+batch_orders:
+  get:
+    summary: Find all orders by card id.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      $ref: '../_schemas.yaml#/ordersByCardId'
+process:
+  post:
+    summary: Process orders in work.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              rowsData:
+                type: object
+                properties:
+                  employeeId:
+                    type: integer
+                  rows:
+                    type: array
+                    items:
+                      type: object
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                staticMessages:
+                  type: array
+                  items:
+                    $ref: '../_schemas.yaml#/message'
+                count:
+                  type: integer
+                countOrdersWithLabels:
+                  type: integer
+                ordersInWork:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      card:
+                        $ref: '../_schemas.yaml#/batchCards'
+                      orders:
+                        $ref: '../_schemas.yaml#/ordersByCardId'
+                message: 
+                  type: string
+                  enum:
+                    - :ids orders processed to status in_work.
+check:
+  get:
+    summary: Check in work orders and send back a worning.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    count:
+                      type: integer
+                    countOrdersWithLabels:
+                      type: integer
+                    ordersInWork:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          card:
+                            $ref: '../_schemas.yaml#/batchCards'
+                          orders:
+                            $ref: '../_schemas.yaml#/ordersByCardId'
+                - type: object
+                  properties:
+                    count:
+                      type: integer
+                    countOrdersWithLabels:
+                      type: integer
+                    ordersInWork:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          card:
+                            $ref: '../_schemas.yaml#/batchCards'
+                          orders:
+                            $ref: '../_schemas.yaml#/ordersByCardId'
+                    staticMessages:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/message'
+complete:
+  post:
+    summary: Complete previously selected orders.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              orderIds:
+                $ref: '../_schemas.yaml#/orderIds'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - ':ids order(s) has been completed, :success web hooks succeeded, :errors web hooks failed, :discarded order(s) has been discarded, :manifests manifest(s) has been canceled'
+                    -  ':discarded order(s) has been discarded, :manifests manifest(s) has been canceled'
+                staticMessages:
+                  type: string
+                  enum:
+                    - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+                completedOrders:
+                  type: array
+                  items:
+                    type: object
+                discardedOrders:
+                  type: array
+                  items:
+                    type: object
+discard:
+  post:
+    summary: Discard previously selected orders.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              orderIds:
+                $ref: '../_schemas.yaml#/idArray'
+              confirmed:
+                type: boolean
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - ':ids order(s) has been discarded'
+                    -  'manifest(s) has been canceled'
+                staticMessages:
+                  type: string
+                  enum:
+                    - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+                    - 'Manifests with these IDs will be canceled: :ids'
+                discardedOrders:
+                  type: array
+                  items:
+                    type: object
+notes:
+  get:
+    summary: Generate a docx.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - orderIds:
+          $ref: '../_schemas.yaml#/orderIds'
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/docx200'
+envelopes:
+  get:
+    summary: Generate a envelopes docx.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - orderIds:
+          $ref: '../_schemas.yaml#/orderIds'
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/docx200'
+print:
+  post:
+    summary: Print labels.
+    tags:
+      - Batch Orders
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              orderIds:
+                $ref: '../_schemas.yaml#/idArray'
+              employee_id:
+                type: integer
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/pdf200b64'
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - No orders!
+                    - Selected orders without labels!
+cancel:
+  post:
+    summary: Cancel labels.
+    tags:
+      - Batch Orders
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              orderIds:
+                $ref: '../_schemas.yaml#/idArray'
+              employee_id:
+                type: integer
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - cancel labels ok
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - No orders!
+                    - 'Address to is missing in order #:id'
+                    - 'Address to is not in the USA in order #:id'
+                    - 'AddresFrom is missing in order #:id'
+                    - 'State from AddresTo is not valid in order #:id'
+generate:
+  post:
+    summary: Generate labels.
+    tags:
+      - Batch Orders
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            type: object
+            properties:
+              orderIds:
+                $ref: '../_schemas.yaml#/idArray'
+              employee_id:
+                type: integer
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - cancel labels ok
+                type:
+                  type: string
+                  enum:
+                    - error
+                orderId:
+                  type: integer
+                text:
+                  type: string
+              required:
+                - message
+labelStatus:
+  get:
+    summary: Get a labal status.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - details:
+          type: boolean
+          name: details
+          in: query
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    icons:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          img:
+                            type: string
+                          tooltip:
+                            type: string
+                          alt:
+                            type: string
+                    statusMessage:
+                      type: string
+                      enum:
+                        - 'Generating labels :count.'
+                        - 'Errors: :countErrors'
+manifestStatus:
+  get:
+    summary: Get a manifest status.
+    tags:
+      - Batch Orders
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          enum:
+                            - new
+                            - completed
+                            - canceled
+                        orders:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                        fileLink:
+                          type: string
+                        ile_cutLink:
+                          type: string
+                - type: object
+                  properties:
+                    data:
+                      type: integer
+                      nullable: true

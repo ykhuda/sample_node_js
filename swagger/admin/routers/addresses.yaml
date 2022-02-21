@@ -1,0 +1,123 @@
+id:
+  get:
+    summary: Get an address by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    address:
+                      $ref: '../_schemas.yaml#/address'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update an address by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/address'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete an address by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+addresses:
+  post:
+    summary: Create a new address.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/address'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been created.
+                id:
+                  type: integer
+  get:
+    summary: Get all addresses.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array 
+                      items:
+                        $ref: '../_schemas.yaml#/address'
+                    page:
+                      type: integer
+                    total:
+                      type: integer'

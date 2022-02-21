@@ -1,0 +1,967 @@
+checkLogin:
+  get:
+    summary: Check whether a user exists in the db.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/authHeader'
+      - $ref: '../_schemas.yaml#/loginParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 200
+                status:
+                  type: string
+                  enum:
+                    - ok
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - login missing
+getUser:
+  get:
+    summary: Get a user's data. The data is retrieved from the session automatically.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/authHeader'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 200
+                status:
+                  type: string
+                  enum:
+                    - ok
+                id:
+                  type: integer
+                login:
+                  type: string
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+setTestMode:
+  post:
+    summary: Update a user's test_mode property.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/authHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              test_mode:
+                type: integer
+                enum:
+                  - 0
+                  - 1
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 200
+                status:
+                  type: string
+                  enum:
+                    - ok
+                test_mode:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+registration:
+  post:
+    summary: Sign up form
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+                required: true
+              password:
+                type: string
+                required: true
+              password_confirmation:
+                type: string
+                required: true
+              fname:
+                type: string
+                required: true
+              lname:
+                type: string
+                required: true
+              dicount_code:
+                type: string
+              silent_add:
+                type: string
+                description: Activate a user without sending an email.
+              silent:
+                type: string
+                description: Activate a user without sending an email.
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 200
+                  description: Http status code
+                status:
+                  type: string
+                  enum:
+                    - ok
+                user_id:
+                  type: integer
+                  description: An id a new user.
+                dicount_credit:
+                  type: integer
+                  description: A user's credits.
+      '400':
+        description: INVALID_DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 400
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - login/password missing.
+                    - User :login already exists.
+                    - Password is too short. Minimum 4 characters.
+                    - Wrong password confirmation.
+                    - First Name is required.
+                    - Last Name is required.
+                    - Sorry, the discount code you are trying to use is invalid!
+                    - We are sorry, this discount code has already been used the maximum number of times.
+      '500':
+        description: SERVER_ERROR
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 500
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Anet null response received.
+authorization:
+  post:
+    summary: Sign in form.
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+                required: true
+              password:
+                type: string
+                required: true
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: A user's auth token
+                user:
+                  type: object
+                  description: A user's data
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Login data is invalid.
+                    - Password is incorrect.
+                    - Your account is not activated. Check your email.
+                    - Your account is blocked.
+token:
+  post:
+    summary: Log in as a user via a user's token
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/hashParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: A user's auth token
+                user:
+                  type: object
+                  description: A user's data
+      '404':
+        description: NOT FOUND
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 404
+                  description: Http status code
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - No user with such token.
+      '403':
+        description: NO_PERMISSION
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 403
+                  description: Http status code
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - The user is banned.
+                    - The user is not activated.
+activation:
+  post:
+    summary: Activate user via email hash
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/hashParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid:
+                  type: string
+                  description: A user's auth token
+      '400':
+        description: INVALID_DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 400
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Please, check the url address.
+                    - Incorrect activation key.
+                    - This account has already been activated.
+                    - The URL address is incorrect. Maybe this account has already been activated.
+resetPasswordRequest:
+  post:
+    summary: Send an email to reset a user's password.
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+                required: true
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Reset request has been send on your email.
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Login missing.
+                    - No user with such login.
+                    - The user is banned.
+                    - The user has been registered without a password.
+resetPasswordConfirm:
+  get:
+    summary: Get a user's hash to confirm reset password.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/hashParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hash:
+                  type: string
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - No hash.
+  post:
+    summary: Send a user's hash to confirm reset password.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/hashParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              pass:
+                type: string
+                required: true
+              pass_confirm:
+                type: string
+                required: true
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - The password has been changed.
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - The url is invalid. Please, check the url or repeat the reset process.
+    '400':
+      description: INVALID_DATA
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              httpCode:
+                type: string
+                enum:
+                  - 400
+              status:
+                type: string
+                enum:
+                  - error
+              message:
+                type: string
+                enum:
+                  - The reset session is expired. Try the reset process again.
+                  - Please enter your new password.
+                  - The entered passwords don\'nt match.
+integrations:
+  post:
+    summary: Sign up in Project_name App for integrations
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+                required: true
+              password:
+                type: string
+                required: true
+              user_key:
+                type: string
+                required: true
+              api_key:
+                type: string
+                required: false
+              password_confirmation:
+                type: string
+                required: true
+              fname:
+                type: string
+                required: true
+              lname:
+                type: string
+                required: true
+              dicount_code:
+                type: string
+              provider:
+                type: string
+                enum:
+                  - redtail
+              need_avtivate:
+                type: boolean
+                description: Activate a user without sending an email.
+          encoding:
+            payload:
+              contentType: application/json
+        application/json:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+                required: true
+              password:
+                type: string
+                required: true
+              user_key:
+                type: string
+                required: true
+              api_key:
+                type: string
+                required: false
+              password_confirmation:
+                type: string
+                required: true
+              fname:
+                type: string
+                required: true
+              lname:
+                type: string
+                required: true
+              dicount_code:
+                type: string
+                provider:
+                  type: string
+                  enum:
+                    - redtail
+              need_avtivate:
+                type: boolean
+                description: Activate a user without sending an email.
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 200
+                  description: Http status code
+                status:
+                  type: string
+                  enum:
+                    - ok
+                user_id:
+                  type: integer
+                  description: An id a new user.
+                dicount_credit:
+                  type: integer
+                  description: A user's credits.
+      '400':
+        description: INVALID_DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 400
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 401
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - integration not found
+                    - User already exists.Please,try login.
+                    - login/password missing.
+                    - User :login already exists.
+                    - Password is too short. Minimum 4 characters.
+                    - Wrong password confirmation.
+                    - First Name is required.
+                    - Last Name is required.
+                    - Sorry, the discount code you are trying to use is invalid!
+                    - We are sorry, this discount code has already been used the maximum number of times.
+      '500':
+        description: SERVER_ERROR
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: string
+                  enum:
+                    - 500
+                status:
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Anet null response received.
+socialNetworkRegistration:
+  post:
+    tags:
+      - Auth
+    summary: >-
+      Authorize by social network
+    description: >-
+      Authorize/Register by social network
+    operationId: auth_provider
+    parameters:
+      - in: header
+        name: X-Client
+        schema:
+          type: string
+          description: "(Project_name-iOS|Project_name-Android) {version}"
+          example: Project_name-iOS 3.1
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              provider:
+                type: string
+                enum:
+                  - facebook
+                  - google
+                  - apple
+              access_token:
+                type: string
+              discount_code:
+                type: string
+              add_email_status:
+                type: string
+                example: ok
+                deprecated: true
+              fullname:
+                type: string
+                deprecated: true
+              fname:
+                type: string
+                description: First name (actual for apple provider)
+                deprecated: false
+              lname:
+                type: string
+                description: Last name (actual for apple provider)
+                deprecated: false
+              login:
+                type: string
+                deprecated: true
+              id:
+                type: string
+                deprecated: true
+              client:
+                type: string
+                description: for web applications
+                example: web
+                deprecated: true
+            required:
+              - provider
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            $ref: '../_schemas.yaml#/loginResponse'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - invalid provider
+                    - Invalid Email
+                    - Email already exists
+                    - invalid access token
+                    - banned
+                    - not activated
+      '500':
+        description: Auth error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 500
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - Social network auth failed. Try again later
+                    - "Wrong social network registration: {message}"
+                    - authorize.net error
+logout:
+  post:
+    tags:
+      - Auth
+    summary: >-
+      Logout user from application
+    description: >-
+      Logout user from application
+    operationId: logout
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful logout
+setPassword:
+  post:
+    tags:
+      - Auth
+    summary: >-
+      Convert account from social network to password.
+    description: >-
+      Convert account from social network to password. Send an email with a link to a page where user can set a password.
+    operationId: set_password
+    security:
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: e-mail
+            required:
+              - email
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - password is already set
+                    - no email
+                    - Email already exists
+      '401':
+        description: No auth
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 401
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no auth
+convertAccount:
+  post:
+    tags:
+      - Auth
+    summary: >-
+      Convert account from social network to password
+    description: >-
+      Convert account from social network to password. Send an email with a link to a page where user can set a password.
+    operationId: set_password
+    security:
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: e-mail
+              password:
+                type: string
+            required:
+              - email
+              - password
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - undefined email
+                    - email is not valid
+                    - email already exists
+                    - password is already set
+                    - no password
+      '401':
+        description: No auth
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 401
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no auth

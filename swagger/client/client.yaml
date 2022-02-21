@@ -1,0 +1,245 @@
+openapi: 3.0.0
+info:
+  title: Project_name API
+  description: This is an API documentation for a Project_name Client.
+  version: 1.0.0
+servers:
+  - url: 'https://Project_name.com/api/v1/user'
+    description: Test server
+  - url: http://localhost:3000/api/v1/user
+    description: Development server
+paths:
+  ### Auth
+  /auth/checkLogin:
+    $ref: './routers/auth.yaml#/checkLogin'
+  /auth/getUser:
+    $ref: './routers/auth.yaml#/getUser'
+  /auth/setTestMode:
+    $ref: './routers/auth.yaml#/setTestMode'
+  /auth/registration:
+    $ref: './routers/auth.yaml#/registration'
+  /auth/authorization:
+    $ref: './routers/auth.yaml#/authorization'
+  /auth/token/:token:
+    $ref: './routers/auth.yaml#/token'
+  /auth/activation/:hash:
+    $ref: './routers/auth.yaml#/activation'
+  /auth/resetPasswordRequest:
+    $ref: './routers/auth.yaml#/resetPasswordRequest'
+  /auth/resetPasswordConfirm/:hash:
+    $ref: './routers/auth.yaml#/resetPasswordConfirm'
+  /auth/integrations:
+    $ref: './routers/auth.yaml#/integrations'
+  /auth/socialNetworkRegistration:
+    $ref: './routers/auth.yaml#/socialNetworkRegistration'
+  /auth/logout:
+    $ref: './routers/auth.yaml#/logout'
+  /auth/setPassword:
+    $ref: './routers/auth.yaml#/setPassword'
+  /auth/convertAccount:
+    $ref: './routers/auth.yaml#/convertAccount'
+  ### Basket
+  /basket/send:
+    $ref: './routers/basket.yaml#/send'
+  /basket/itemFromAddress:
+    $ref: './routers/basket.yaml#/itemFromAddress'
+  /basket/update:
+    $ref: './routers/basket.yaml#/update'
+  /basket/clear:
+    $ref: './routers/basket.yaml#/clear'
+  /basket/count:
+    $ref: './routers/basket.yaml#/count'
+  /basket/remove:
+    $ref: './routers/basket.yaml#/remove'
+  /basket/cancel:
+    $ref: './routers/basket.yaml#/cancel'
+  /basket/allGrouped:
+    $ref: './routers/basket.yaml#/allGrouped'
+  /basket/allNew:
+    $ref: './routers/basket.yaml#/allNew'
+  /basket/item:
+    $ref: './routers/basket.yaml#/item'
+  ### Bulk Orders
+  /bulkOrders/parseXls:
+    $ref: './routers/bulk_orders.yaml#/parseXls'
+  ### Card
+  /cards/list:
+    $ref: './routers/cards.yaml#/list'
+  /cards/list/sections:
+    $ref: './routers/cards.yaml#/sections'
+  /cards/random:
+    $ref: './routers/cards.yaml#/random'
+  /cards/view:
+    $ref: './routers/cards.yaml#/view'
+  /cards/uploadCustomLogo:
+    $ref: './routers/cards.yaml#/uploadCustomLogo'
+  /cards/checkUploadedCustomLogo:
+    $ref: './routers/cards.yaml#/checkUploadedCustomLogo'
+  /cards/listCustomUserImages:
+    $ref: './routers/cards.yaml#/listCustomUserImages'
+  /cards/deleteCustomLogo:
+    $ref: './routers/cards.yaml#/deleteCustomLogo'
+  /cards/createCustomCard:
+    $ref: './routers/cards.yaml#/createCustomCard'
+  /cards/deleteCustomCard:
+    $ref: './routers/cards.yaml#/deleteCustomCard'
+  ### Credit Card
+  /creditCards/list:
+    $ref: './routers/credit_cards.yaml#/list'
+  /creditCards/listOnly:
+    $ref: './routers/credit_cards.yaml#/listOnly'
+  /creditCards/addNew:
+    $ref: './routers/credit_cards.yaml#/addNew'
+  /creditCards/setDefault:
+    $ref: './routers/credit_cards.yaml#/setDefault'
+  /creditCards/delete:
+    $ref: './routers/credit_cards.yaml#/delete'
+  ### Categories
+  /categories/list:
+    $ref: './routers/categories.yaml#/list'
+  ### Check Auth
+  /checkauth/auth:
+    $ref: './routers/check_auth.yaml#/auth'
+  ### Coupon
+  /coupon/getCouponCredit:
+    $ref: './routers/coupon.yaml#/getCouponCredit'
+  ### Config
+  /config/index:
+    $ref: './routers/config.router.yaml#/index'
+  /config/order:
+    $ref: './routers/config.router.yaml#/order'
+  ### Countries
+  /countries/list:
+    $ref: './routers/countries.yaml#/list'
+  /countries/listStates:
+    $ref: './routers/countries.yaml#/listStates'
+  ### Default
+  /default/feedBack:
+    $ref: './routers/default.yaml#/feedBack'
+  /default/whitepaper:
+    $ref: './routers/default.yaml#/whitePaper'
+  /default/samples:
+    $ref: './routers/default.yaml#/samples'
+  /default/registerToken:
+    $ref: './routers/default.yaml#/registerToken'
+  ### Design
+  /design/getCustomizedCard:
+    $ref: './routers/design.yaml#/getCustomizedCard'
+  /design/getCustomCard:
+    $ref: './routers/design.yaml#/getCustomCard'
+  /design/delete:
+    $ref: './routers/design.yaml#/delete'
+  ### Fonts
+  /fonts/list:
+    $ref: './routers/fonts.yaml#/list'
+  /fonts/listForCustomizer:
+    $ref: './routers/fonts.yaml#/listForCustomizer'
+  ### Girt Cards
+  /giftCards/list:
+    $ref: './routers/gift_cards.yaml#/list'
+  ### Inserts
+  /inserts/list:
+    $ref: './routers/inserts.yaml#/list'
+  ### Notifications
+  /notifications/list:
+    $ref: './routers/notifications.yaml#/list'
+  /notifications/markAsRead:
+    $ref: './routers/notifications.yaml#/markAsRead'
+  #Orders
+  /orders/placeBasket:
+    $ref: './routers/orders.yaml#/placeBasket'
+  /orders/send:
+    $ref: './routers/orders.yaml#/send'
+  /orders/place:
+    $ref: './routers/orders.yaml#/place'
+  /orders/pay:
+    $ref: './routers/orders.yaml#/pay'
+  /orders/getHolidays:
+    $ref: './routers/orders.yaml#/getHolidays'
+  /orders/calcTaxes:
+    $ref: './routers/orders.yaml#/calcTaxes'
+  /orders/pastBaskets:
+    $ref: './routers/orders.yaml#/pastBaskets'
+  /orders/list:
+    $ref: './routers/orders.yaml#/list'
+  /orders/details:
+    $ref: './routers/orders.yaml#/details'
+  /orders/listChilds:
+    $ref: './routers/orders.yaml#/listChilds'
+  /orders/listGrouped:
+    $ref: './routers/orders.yaml#/listGrouped'
+  ### Profile
+  /profile/addRecipient:
+    $ref: './routers/profile.yaml#/addRecipient'
+  /profile/updateRecipient:
+    $ref: './routers/profile.yaml#/updateRecipient'
+  /profile/deleteRecipient:
+    $ref: './routers/profile.yaml#/deleteRecipient'
+  /profile/recipientsList:
+    $ref: './routers/profile.yaml#/recipientsList'
+  /profile/createAddress:
+    $ref: './routers/profile.yaml#/createAddress'
+  /profile/updateAddress:
+    $ref: './routers/profile.yaml#/updateAddress'
+  /profile/deleteAddress:
+    $ref: './routers/profile.yaml#/deleteAddress'
+  /profile/address:
+    $ref: './routers/profile.yaml#/address'
+  /profile/setDefaultAddress:
+    $ref: './routers/profile.yaml#/setDefaultAddress'
+  /profile/listAddresses:
+    $ref: './routers/profile.yaml#/listAddresses'
+  /profile/updateBillingInfo:
+    $ref: './routers/profile.yaml#/updateBillingInfo'
+  /profile/actionChangeEmail:
+    $ref: './routers/profile.yaml#/actionChangeEmail'
+  /profile/shareOptions:
+    $ref: './routers/profile.yaml#/shareOptions'
+  /profile/settings:
+    $ref: './routers/profile.yaml#/settings'
+  /profile/changePassword:
+    $ref: './routers/profile.yaml#/changePassword'
+  /profile/signatures:
+    $ref: './routers/profile.yaml#/signatures'
+  /profile/getAuthorizeNetInfo:
+    $ref: './routers/profile.yaml#/getAuthorizeNetInfo'
+  ### Subscriptions
+  /subscriptions/list:
+    $ref: './routers/subscriptions.yaml#/list'
+  /subscriptions/cancel:
+    $ref: './routers/subscriptions.yaml#/cancel'
+  /subscriptions/renewalTax:
+    $ref: './routers/subscriptions.yaml#/renewalTax'
+  /subscriptions/taxList:
+    $ref: './routers/subscriptions.yaml#/taxList'
+  /subscriptions/new:
+    $ref: './routers/subscriptions.yaml#/new'
+  /subscriptions/updatePaymentMethod:
+    $ref: './routers/subscriptions.yaml#/updatePaymentMethod'
+  ### Shipping
+  /shipping/methods:
+    $ref: './routers/shipping.yaml#/methods'
+  /shipping/rates:
+    $ref: './routers/shipping.yaml#/rates'
+  ### Templates
+  /templates/create:
+    $ref: './routers/templates.yaml#/create'
+  /templates/update:
+    $ref: './routers/templates.yaml#/update'
+  /templates/delete:
+    $ref: './routers/templates.yaml#/delete'
+  /templates/list:
+    $ref: './routers/templates.yaml#/list'
+  /templates/view:
+    $ref: './routers/templates.yaml#/view'
+  ### Template Categories
+  /templateCategories/list:
+    $ref: './routers/template_categories.yaml#/list'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: authorization
+security:
+  - ApiKeyAuth: [ ]

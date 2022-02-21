@@ -1,0 +1,204 @@
+qa400:
+  description: INVALID DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 400
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+            enum:
+              - Error in the entered manifest ID - check and enter the manifest ID again.
+              - Someone removed the orders from the manifest.
+qa404:
+  description: NOT FOUND
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 404
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+            enum:
+              - Manifest not found.
+              - Manifest has already been canceled by someone.
+              - Manifest has already been completed by someone.
+              - Invalid manifest status.
+model404:
+  description: NOT FOUND
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 404
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+            enum:
+              - A record in :model table with :id id doesn't exist.
+        example:
+          httpCode: 404
+          status: error
+          message: A record in manifests table with 40023 id doesn't exist.
+session440:
+  description: SESSION_ERROR
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 440
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+            enum:
+              - Session has been expired.
+              - Api token has been expired. You have to re-generate the token.
+        example:
+          httpCode: 440
+          status: error
+          message: Session has been expired.
+apiKey403:
+  description: NO_PERMISSION
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 403
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+            enum:
+              - Unknown Api token.
+        example:
+          httpCode: 403
+          status: error
+          message: Unknown Api token.
+docx200:
+  description: OK
+  content:
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+      schema:
+        type: string
+        format: binary
+pdf200bin:
+  description: OK
+  content:
+    application/json:
+      schema:
+        type: string
+        format: binary
+pdf200b64:
+  description: OK
+  content:
+    application/json:
+      schema:
+        type: string
+        format: base64
+401MethodCreate:
+  description: INVALID_DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - method name is required.
+              - method label is required.
+401MethodUpdate:
+  description: INVALID_DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - method name is required.
+              - method label is required.
+404NotID:
+  description: INVALID_DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - id not set.
+401RateCreate:
+  description: INVALID_DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - name is required.
+              - base is required.
+              - plus price pre card is required.
+              - minimum fee is required.
+              - sort order is required.
+401RateUpdate:
+  description: INVALID_DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - id is required.
+              - name is required.
+              - base is required.
+              - plus price pre card is required.
+              - minimum fee is required.
+              - sort order is required.

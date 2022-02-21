@@ -1,0 +1,253 @@
+list:
+  get:
+    tags:
+      - Credit Cards
+    summary: >-
+      List credit card
+    description: >-
+      List credit card.
+    operationId: list_credit_cards
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                credit_cards:
+                  $ref: '../_schemas.yaml#/CreditCards'
+                discount_credit:
+                  type: integer
+                  format: int64
+                  example: 0
+                discount_credit_type2:
+                  type: integer
+                  format: int64
+                  example: 0
+                invoiced:
+                  type: integer
+                  format: int64
+                  example: 0
+                billing_info:
+                  $ref: '../_schemas.yaml#/BillingInfo'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - invalid basket item id
+                    - basket item not found
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'
+addNew:
+  post:
+    tags:
+      - Credit Cards
+    summary: >-
+      Add credit card
+    description: >-
+      Add credit card
+    operationId: add_credit_card_new
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - zip
+              - country_id
+              - type
+            properties:
+              token:
+                type: string
+                example: eyJjb2RlIjoiNTBfMl8wNjAwMDUzODU0RkQ4QTAxMThGN0MxRkE5N0UzODk2MDBCNEZCMTYzMjg2NUIyN0M1N0E2Qzg4MDA0ODEyNzYyN0VFMzUwM0IwODg5MTNCRkVDNTNENDQ1QUMxMzFGQUEwRjk2MjBCIiwidG9rZW4iOiI5NTYzODY5OTI2Njk5ODk1NTA0NjAzIiwidiI6IjEuMSJ9
+                description: Authorize.Net card dataValue
+              descriptor:
+                type: string
+                example: COMMON.ACCEPT.INAPP.PAYMENT
+                description: Authorize.Net dataDescriptor (COMMON.ACCEPT.INAPP.PAYMENT)
+                default: COMMON.ACCEPT.INAPP.PAYMENT
+              type:
+                type: integer
+                format: int64
+                example: 0
+                description: >-
+                  0 - Visa
+                  1 - MasterCard
+                  2 - Discover
+                  3 - American Express
+              name:
+                type: string
+                example: Cardholder Name
+                description: Name on Card
+              address:
+                type: string
+              zip:
+                type: string
+                example: 123456
+              country_id:
+                type: integer
+                example: 1
+                default: 1
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                credit_card:
+                  $ref: '../_schemas.yaml#/CreditCard'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - type error
+                    - zip error
+                    - country error
+                    - error adding payment method
+                    - credit card exists
+      '500':
+        description: Internal error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: false
+                code:
+                  type: integer
+                  example: 500
+                message:
+                  type: string
+                  description: error description
+                  enum:
+                    - payment profile id error
+listOnly:
+  get:
+    tags:
+      - Credit Cards
+    summary: >-
+      List of credit cards without unnecessary information
+    description: >-
+      List of credit cards without unnecessary information.
+    operationId: list_credit_cards_only
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                credit_cards:
+                  $ref: '../_schemas.yaml#/CreditCards'
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'
+delete:
+  post:
+    tags:
+      - Credit Cards
+    summary: >-
+      Delete credit card
+    description: >-
+      Delete credit card.
+    operationId: delete_credit_card
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - credit_card_id
+            properties:
+              credit_card_id:
+                type: integer
+                example: 1449
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/200'
+      '400':
+        $ref: '../_responses.yaml#/CreditCard400'
+setDefault:
+  post:
+    tags:
+      - Credit Cards
+    summary: >-
+      Set default credit card
+    description: >-
+      Set default credit card.
+    operationId: set_default_credit_card
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - credit_card_id
+            properties:
+              credit_card_id:
+                type: integer
+                example: 1449
+    responses:
+      '200':
+        $ref: '../_responses.yaml#/200'
+      '400':
+        $ref: '../_responses.yaml#/CreditCard400'

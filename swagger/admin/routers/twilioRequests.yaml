@@ -1,0 +1,121 @@
+id:
+  get:
+    summary: Get a twilio requests by id.
+    tags:
+      - Twilio Request
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    twilioRequest:
+                      $ref: '../_schemas.yaml#/twilioRequest'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a twilio requests by id.
+    tags:
+      - Twilio Request
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/twilioRequest'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Twilio request has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a twilio requests by id.
+    tags:
+      - Twilio Request
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Twilio requests with id :id has been deleted.
+twilioRequests:
+  post:
+    summary: Create a new twilio request.
+    tags:
+      - Twilio Request
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/twilioRequest'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Successfully added a new twilio request.
+                id:
+                  type: integer
+  get:
+    summary: Get all twilio requests.
+    tags:
+      - Twilio Request
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/twilioRequest'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

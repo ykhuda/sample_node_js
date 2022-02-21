@@ -1,0 +1,143 @@
+id:
+  get:
+    summary: Get a coupon by id.
+    tags:
+      - Coupon
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    coupon:
+                      $ref: '../_schemas.yaml#/coupon'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a coupon by id.
+    tags:
+      - Coupon
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/coupon'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - coupon has been updated.
+      '400':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Coupon with code (:code) already exists.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a coupon by id.
+    tags:
+      - Coupon
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - coupons with id :id has been deleted.
+coupons:
+  post:
+    summary: Create a new coupon.
+    tags:
+      - Coupon
+    properties:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/coupon'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Successfully added a new coupon.
+                id:
+                  type: integer
+      '400':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Coupon with code (:code) already exists.
+  get:
+    summary: Get all coupons.
+    tags:
+      - Coupon
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/coupon'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

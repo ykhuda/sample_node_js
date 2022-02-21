@@ -1,0 +1,268 @@
+index:
+  get:
+    tags:
+      - Config
+    summary: >-
+      Get App Config
+    description: >-
+      Return update requirements (based on X-Client), placeholders/tags for message composition
+    operationId: get_config
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                update:
+                  type: object
+                  properties:
+                    required:
+                      type: boolean
+                      example: true
+                      description: app update is ovailable
+                    hard:
+                      type: boolean
+                      example: false
+                      description: app update is available and required to proceed
+                tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      placeholder:
+                        type: string
+                        example: firstname
+                      label:
+                        type: string
+                        example: First Name
+order:
+  post:
+    tags:
+      - Config
+    summary: >-
+      Save Order Config
+    description: >-
+      Save order configurations for integration REDTAIL*
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              configs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    card_id:
+                      type: integer
+                      example: 34
+                    font_id:
+                      type: integer
+                      example: 12
+                    font_size:
+                      type: integer
+                      example: 32
+                    signature_id:
+                      type: integer
+                      example: 112
+                    signature2_id:
+                      type: integer
+                      example: 112
+                    message:
+                      type: string
+                      example: >-
+                        Dear XXX
+                        Thank you so much for the generous gift.  Both XXX and I are sure to use it for years to come.  We are so sorry you weren't able to join us for our special day but we appreciate your thoughtfulness and generosity.  We hope to celebrate with you soon.
+                        All the best
+                        XXXX
+                    event:
+                      type: string
+                      enum:
+                        - birthday
+                        - anniversary
+                        - investment_letter_clients
+                        - investment_letter_prospects
+                    retail_tag:
+                      type: string
+                      example: birthday
+                    wishes:
+                      type: string
+                    status:
+                      type: integer
+                      enum:
+                        - 1
+                        - 0
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                config:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      user_id:
+                        type: integer
+                        example: 85669
+                      card_id:
+                        type: integer
+                        example: 34
+                      message:
+                        type: string
+                        example: >-
+                          Dear XXX
+                          Thank you so much for the generous gift.  Both XXX and I are sure to use it for years to come.  We are so sorry you weren't able to join us for our special day but we appreciate your thoughtfulness and generosity.  We hope to celebrate with you soon.
+                          All the best
+                          XXXX
+                      font_id:
+                        type: integer
+                        example: 12
+                      font_size:
+                        type: integer
+                        example: 32
+                      retail_tag:
+                        type: string
+                        example: birthday
+                      signature_id:
+                        type: integer
+                        example: 112
+                      signature2_id:
+                        type: integer
+                        example: 112
+                      wishes:
+                        type: string
+                      event:
+                        type: string
+                        enum:
+                          - birthday
+                          - anniversary
+                          - investment_letter_clients
+                          - investment_letter_prospects
+                      status:
+                        type: integer
+                        enum:
+                          - 1
+                          - 0
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - body not valid!
+                    - event not set!
+                    - card id not set! (event)
+                    - font id not set! (event)
+                    - message not set! (event)
+                    - card not found! (event)
+                    - font not found! (event)
+                    - signature not found! (event)
+                    - signature2 not found! (event)
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'
+  get:
+    tags:
+      - Config
+    summary: >-
+      Get Order Config
+    description: >-
+      Get Order Config List
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                list:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      user_id:
+                        type: integer
+                        example: 85669
+                      card_id:
+                        type: integer
+                        example: 34
+                      message:
+                        type: string
+                        example: >-
+                          Dear XXX
+                          Thank you so much for the generous gift.  Both XXX and I are sure to use it for years to come.  We are so sorry you weren't able to join us for our special day but we appreciate your thoughtfulness and generosity.  We hope to celebrate with you soon.
+                          All the best
+                          XXXX
+                      font_id:
+                        type: integer
+                        example: 12
+                      font_size:
+                        type: integer
+                        example: 32
+                      retail_tag:
+                        type: string
+                        example: birthday
+                      signature_id:
+                        type: integer
+                        example: 112
+                      signature2_id:
+                        type: integer
+                        example: 112
+                      wishes:
+                        type: string
+                      event:
+                        type: string
+                        enum:
+                          - birthday
+                          - anniversary
+                          - investment_letter_clients
+                          - investment_letter_prospects
+                      status:
+                        type: integer
+                        enum:
+                          - 1
+                          - 0
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'

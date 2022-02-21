@@ -1,0 +1,35 @@
+list:
+  get:
+    tags:
+      - templates
+    summary: >-
+      List template categories
+    description: >-
+      Get list of template categories
+    operationId: list_template_categories
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                categories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                      name:
+                        type: string
+                        example: Thank You Notes

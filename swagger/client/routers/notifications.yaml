@@ -1,0 +1,110 @@
+list:
+  get:
+    tags:
+      - Notifications
+    summary: >-
+      Get notifications list
+    description: >-
+      Get notifications list
+    operationId: list_notifications
+    security:
+      - { }
+      - uidKey: [ ]
+    responses:
+      '200':
+        description: Notifications list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                notifications:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      message:
+                        type: string
+                        example: Your plan’s terms have been changed. You can resubsribe to apply the changes
+                      color:
+                        type: string
+                        example: RED
+                        enum:
+                          - RED
+                          - GREEN
+
+markAsRead:
+  post:
+    tags:
+      - Notifications
+    summary: >-
+      Mark notification as read
+    description: >-
+      Mark notification as read
+    operationId: mark_notification_as_read
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: integer
+                example: 2
+    responses:
+      '200':
+        description: Mark notification as read
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no such notification
+      '401':
+        description: no auth
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 401
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no auth

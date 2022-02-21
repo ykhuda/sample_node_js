@@ -1,0 +1,3026 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project_name",
+    "description": "This is an API documentation for a Project_name Admin.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/activities/{model}": {
+      "get": {
+        "summary": "Returns a list of users.",
+        "description": "tEST",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "activities"
+        ]
+      }
+    },
+    "/activities/{model}/{id}": {
+      "get": {
+        "summary": "Returns a list of users.",
+        "description": "tEST",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "activities"
+        ]
+      },
+      "delete": {
+        "summary": "Delete activity.",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity with id has been deleted."
+          }
+        },
+        "tags": [
+          "activities"
+        ]
+      }
+    },
+    "/addresses": {
+      "get": {
+        "summary": "Returns a list of addresses.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "addresses"
+        ]
+      },
+      "post": {
+        "summary": "Create address.",
+        "responses": {
+          "200": {
+            "description": "Address has been created."
+          }
+        },
+        "tags": [
+          "addresses"
+        ]
+      }
+    },
+    "/addresses/{id}": {
+      "get": {
+        "summary": "Returns an address.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "addresses"
+        ]
+      },
+      "put": {
+        "summary": "Update an address.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address has been created."
+          }
+        },
+        "tags": [
+          "addresses"
+        ]
+      },
+      "delete": {
+        "summary": "Delete an address.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address with id has been deleted."
+          }
+        },
+        "tags": [
+          "addresses"
+        ]
+      }
+    },
+    "/batch_orders": {
+      "get": {
+        "summary": "Returns orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/paid": {
+      "get": {
+        "summary": "Returns paid orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/generatePdf/{id}": {
+      "get": {
+        "summary": "Generate pdf.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/manifest": {
+      "get": {
+        "summary": "Create manifest.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/in_work": {
+      "get": {
+        "summary": "Returns orders in work.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/process": {
+      "post": {
+        "summary": "Process orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/check": {
+      "get": {
+        "summary": "Check orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/complete": {
+      "post": {
+        "summary": "Complete orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/batch_orders/discard": {
+      "post": {
+        "summary": "Discard orders.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/docx/notes": {
+      "get": {
+        "summary": "Generate docx notes.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/docx/envelopes": {
+      "get": {
+        "summary": "Generate docx envelopes.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/labels/print": {
+      "post": {
+        "summary": "Print labels.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/labels/cancel": {
+      "post": {
+        "summary": "Cancel labels.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/labels/generate": {
+      "post": {
+        "summary": "Generate labels.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/labels/status": {
+      "get": {
+        "summary": "Returns labels status.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/manifest/status": {
+      "get": {
+        "summary": "Returns manifest status.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "batch-orders"
+        ]
+      }
+    },
+    "/card_images": {
+      "get": {
+        "summary": "Returns cards.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "card-images"
+        ]
+      },
+      "post": {
+        "summary": "Create a card.",
+        "responses": {
+          "200": {
+            "description": "Card created"
+          }
+        },
+        "tags": [
+          "card-images"
+        ]
+      }
+    },
+    "/card_images/{id}": {
+      "get": {
+        "summary": "Returns card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "card-images"
+        ]
+      },
+      "put": {
+        "summary": "Update card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card has been updated"
+          }
+        },
+        "tags": [
+          "card-images"
+        ]
+      },
+      "delete": {
+        "summary": "Delete card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card image with id has been deleted."
+          }
+        },
+        "tags": [
+          "card-images"
+        ]
+      }
+    },
+    "/cards": {
+      "get": {
+        "summary": "Returns cards.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      },
+      "post": {
+        "summary": "Create card.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      }
+    },
+    "/{id}/images": {
+      "get": {
+        "summary": "Returns cards.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      }
+    },
+    "/cards/{id}": {
+      "get": {
+        "summary": "Returns card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      },
+      "put": {
+        "summary": "Update card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card has been updated"
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      },
+      "delete": {
+        "summary": "Delete card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card image with id has been deleted."
+          }
+        },
+        "tags": [
+          "cards"
+        ]
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Returns category.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      },
+      "post": {
+        "summary": "Update category.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added new category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The category ID."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Returns category.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      },
+      "put": {
+        "summary": "Update category.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category has been updated"
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      },
+      "delete": {
+        "summary": "Delete category.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category with id has been deleted."
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/client_groups": {
+      "get": {
+        "summary": "Returns category.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "client-groups"
+        ]
+      },
+      "post": {
+        "summary": "Update category.",
+        "responses": {
+          "200": {
+            "description": "Successfully added new group"
+          }
+        },
+        "tags": [
+          "client-groups"
+        ]
+      }
+    },
+    "/client_groups/{id}": {
+      "get": {
+        "summary": "Returns group.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "client-groups"
+        ]
+      },
+      "put": {
+        "summary": "Update group.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group has been updated"
+          }
+        },
+        "tags": [
+          "client-groups"
+        ]
+      },
+      "delete": {
+        "summary": "Delete group.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group with id has been deleted."
+          }
+        },
+        "tags": [
+          "client-groups"
+        ]
+      }
+    },
+    "/client_mails": {
+      "get": {
+        "summary": "Returns mails.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "client-mails"
+        ]
+      }
+    },
+    "/client_mails/{id}/resend": {
+      "put": {
+        "summary": "Resend mail.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resent"
+          }
+        },
+        "tags": [
+          "client-mails"
+        ]
+      }
+    },
+    "/client_mails/{id}": {
+      "get": {
+        "summary": "Returns mail.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "client-mails"
+        ]
+      },
+      "put": {
+        "summary": "Update mail.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail has been updated"
+          }
+        },
+        "tags": [
+          "client-mails"
+        ]
+      },
+      "delete": {
+        "summary": "Delete mail",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail with id has been deleted."
+          }
+        },
+        "tags": [
+          "client-mails"
+        ]
+      }
+    },
+    "/clients": {
+      "get": {
+        "summary": "Returns clients.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      }
+    },
+    "/clients/list": {
+      "get": {
+        "summary": "Returns clients list.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      }
+    },
+    "/{id}/orders": {
+      "get": {
+        "summary": "Returns orders.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      }
+    },
+    "/{id}/token": {
+      "get": {
+        "summary": "Returns token.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "summary": "Returns client.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      },
+      "put": {
+        "summary": "Update client.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client with id has been updated."
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      },
+      "delete": {
+        "summary": "Delete client",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client with id has been deleted."
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      }
+    },
+    "/countries": {
+      "get": {
+        "summary": "Returns countries.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "countries"
+        ]
+      },
+      "post": {
+        "summary": "Add country.",
+        "responses": {
+          "200": {
+            "description": "Successfully added new country"
+          }
+        },
+        "tags": [
+          "countries"
+        ]
+      }
+    },
+    "/countries/{id}": {
+      "get": {
+        "summary": "Returns country.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "countries"
+        ]
+      },
+      "put": {
+        "summary": "Update country.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country has been updated."
+          }
+        },
+        "tags": [
+          "countries"
+        ]
+      },
+      "delete": {
+        "summary": "Delete country.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country with id has been deleted."
+          }
+        },
+        "tags": [
+          "countries"
+        ]
+      }
+    },
+    "/coupons": {
+      "get": {
+        "summary": "Returns coupons.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "coupons"
+        ]
+      },
+      "post": {
+        "summary": "Create coupon.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          },
+          "400": {
+            "description": "Coupon with code already exists."
+          }
+        },
+        "tags": [
+          "coupons"
+        ]
+      }
+    },
+    "/coupons/{id}": {
+      "get": {
+        "summary": "Returns coupon.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "coupons"
+        ]
+      },
+      "put": {
+        "summary": "Update country.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Coupon has been updated."
+          },
+          "400": {
+            "description": "Coupon with code already exists."
+          }
+        },
+        "tags": [
+          "coupons"
+        ]
+      },
+      "delete": {
+        "summary": "Delete country.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Coupon with id has been deleted."
+          }
+        },
+        "tags": [
+          "coupons"
+        ]
+      }
+    },
+    "/credit_cards2": {
+      "get": {
+        "summary": "Returns credit cards .",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards2"
+        ]
+      },
+      "post": {
+        "summary": "Create Pre-pay credit.",
+        "responses": {
+          "200": {
+            "description": "Pre-pay credit has been updated."
+          }
+        },
+        "tags": [
+          "credit-cards2"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Pre-pay credit.",
+        "responses": {
+          "200": {
+            "description": "Credit card with id has been deleted."
+          }
+        },
+        "tags": [
+          "credit-cards2"
+        ]
+      }
+    },
+    "/credit_cards2/{id}": {
+      "get": {
+        "summary": "Returns credit card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards2"
+        ]
+      },
+      "put": {
+        "summary": "Update Pre-pay credit.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pre-pay credit has been updated."
+          }
+        },
+        "tags": [
+          "credit-cards2"
+        ]
+      }
+    },
+    "/credit_cards": {
+      "get": {
+        "summary": "Returns credit cards.",
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards"
+        ]
+      }
+    },
+    "/credit_cards/{id}": {
+      "get": {
+        "summary": "Returns credits.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards"
+        ]
+      }
+    },
+    "/credit_cards/{id}/listOnly": {
+      "get": {
+        "summary": "Returns credit cards.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards"
+        ]
+      }
+    },
+    "/credit_cards/add": {
+      "post": {
+        "summary": "Add credit card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello"
+          }
+        },
+        "tags": [
+          "credit-cards"
+        ]
+      }
+    },
+    "/credit_cards/{id}/setdefault": {
+      "post": {
+        "summary": "Set default credit card.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Credit card with id has been set as default"
+          }
+        },
+        "tags": [
+          "credit-cards"
+        ]
+      }
+    },
+    "/denominations": {
+      "post": {
+        "summary": "Create denomination.",
+        "responses": {
+          "200": {
+            "description": "Denomination has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The credit card ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Denomination has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "denominations"
+        ]
+      },
+      "get": {
+        "summary": "Returns denominations.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "denominations"
+        ]
+      }
+    },
+    "/denominations/{id}": {
+      "get": {
+        "summary": "Returns denomination.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Denomination with id has been set as default"
+          }
+        },
+        "tags": [
+          "denominations"
+        ]
+      },
+      "put": {
+        "summary": "Update denomination.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Denomination has been updated"
+          }
+        },
+        "tags": [
+          "denominations"
+        ]
+      },
+      "delete": {
+        "summary": "Delete denomination.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Denomination with id has been deleted."
+          }
+        },
+        "tags": [
+          "denominations"
+        ]
+      }
+    },
+    "/holidays": {
+      "post": {
+        "summary": "Create holiday.",
+        "responses": {
+          "200": {
+            "description": "Holiday has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The holiday ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Holiday has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "holidays"
+        ]
+      },
+      "get": {
+        "summary": "Returns holidays.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "holidays"
+        ]
+      }
+    },
+    "/holidays/{id}": {
+      "get": {
+        "summary": "Returns holiday.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "holidays"
+        ]
+      },
+      "put": {
+        "summary": "Update holiday.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holiday has been updated"
+          }
+        },
+        "tags": [
+          "holidays"
+        ]
+      },
+      "delete": {
+        "summary": "Delete holiday.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holiday with id has been deleted."
+          }
+        },
+        "tags": [
+          "holidays"
+        ]
+      }
+    },
+    "/inserts": {
+      "post": {
+        "summary": "Create insert.",
+        "responses": {
+          "200": {
+            "description": "Insert has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The holiday ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Insert has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      },
+      "get": {
+        "summary": "Returns inserts.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      }
+    },
+    "/inserts/{id}": {
+      "get": {
+        "summary": "Returns insert.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      },
+      "put": {
+        "summary": "Update insert.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insert has been updated"
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      },
+      "delete": {
+        "summary": "Delete holiday.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insert with id has been deleted."
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      }
+    },
+    "/inserts/{id}/list": {
+      "get": {
+        "summary": "Returns list of inserts.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "inserts"
+        ]
+      }
+    },
+    "/notifications": {
+      "post": {
+        "summary": "Create notification.",
+        "responses": {
+          "200": {
+            "description": "Notification has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The notification ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Notification has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      },
+      "get": {
+        "summary": "Returns notifications.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/notifications/{id}": {
+      "get": {
+        "summary": "Returns notification.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      },
+      "put": {
+        "summary": "Update notification.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification has been updated"
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      },
+      "delete": {
+        "summary": "Delete notification.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification with id has been deleted."
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "Returns orders.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Returns order.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "order": {
+                      "type": "object",
+                      "description": "Order."
+                    },
+                    "countries": {
+                      "type": "object",
+                      "description": "Countries"
+                    },
+                    "fonts": {
+                      "type": "object",
+                      "description": "Fonts"
+                    },
+                    "employees": {
+                      "type": "object",
+                      "description": "Employees"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      },
+      "put": {
+        "summary": "Update order.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order with id has been updated."
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      },
+      "delete": {
+        "summary": "Delete order.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order with id has been deleted"
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      }
+    },
+    "/orders/{id}/gendocx/note": {
+      "get": {
+        "summary": "Returns order note docx file.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      }
+    },
+    "/orders/{id}/gendocx/envelope": {
+      "get": {
+        "summary": "Returns order envelope docx file.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      }
+    },
+    "/orders/{orderId}/assign": {
+      "put": {
+        "summary": "Assign order.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The order ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "orders"
+        ]
+      }
+    },
+    "/profile/{id}/": {
+      "get": {
+        "summary": "Returns employee.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/profile/{id}/changePass": {
+      "put": {
+        "summary": "Change password.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password has been changed."
+          }
+        },
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/profile/{id}/edit": {
+      "put": {
+        "summary": "Edit user.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changes have been saved."
+          },
+          "403": {
+            "description": "Validation error."
+          }
+        },
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/reset/{model}/{id}": {
+      "post": {
+        "summary": "Reset.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          },
+          {
+            "$ref": "#/components/parameters/ModelParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok."
+          },
+          "400": {
+            "description": "Error."
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        },
+        "tags": [
+          "reset"
+        ]
+      }
+    },
+    "/reset/{model}/{token}": {
+      "get": {
+        "summary": "Resset token.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelParam"
+          },
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "reset"
+        ]
+      }
+    },
+    "/reset/{model}/{hash}": {
+      "put": {
+        "summary": "hash.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelParam"
+          },
+          {
+            "in": "path",
+            "name": "hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Something went wrong."
+          },
+          "401": {
+            "description": "Password is required."
+          },
+          "403": {
+            "description": "Bad token."
+          }
+        },
+        "tags": [
+          "reset"
+        ]
+      }
+    },
+    "/share_options": {
+      "post": {
+        "summary": "Create share option.",
+        "responses": {
+          "200": {
+            "description": "Share_option has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The share option ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Share option has been created."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Name field is required."
+          }
+        },
+        "tags": [
+          "share-options"
+        ]
+      },
+      "get": {
+        "summary": "Returns share options.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "share-options"
+        ]
+      }
+    },
+    "/share_options/{id}": {
+      "get": {
+        "summary": "Returns share option.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "share-options"
+        ]
+      },
+      "put": {
+        "summary": "Update share option.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "share_option has been updated"
+          }
+        },
+        "tags": [
+          "share-options"
+        ]
+      },
+      "delete": {
+        "summary": "Delete share option",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "share_option with id has been deleted."
+          }
+        },
+        "tags": [
+          "share-options"
+        ]
+      }
+    },
+    "/signatures": {
+      "post": {
+        "summary": "Create signature.",
+        "responses": {
+          "200": {
+            "description": "Signature has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The signature ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Signature has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      },
+      "get": {
+        "summary": "Returns signatures.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      }
+    },
+    "/signatures/{id}": {
+      "get": {
+        "summary": "Returns signature.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      },
+      "put": {
+        "summary": "Update signature.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Signature has been update"
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      },
+      "delete": {
+        "summary": "Delete signature.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Signature with id has been deleted."
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      }
+    },
+    "/signatures/getFont": {
+      "get": {
+        "summary": "Get font.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      }
+    },
+    "/signatures/uploadFont": {
+      "post": {
+        "summary": "Upload font.",
+        "responses": {
+          "200": {
+            "description": "Font file has been uploaded."
+          }
+        },
+        "tags": [
+          "signatures"
+        ]
+      }
+    },
+    "/social_sharings": {
+      "post": {
+        "summary": "Create social sharing.",
+        "responses": {
+          "200": {
+            "description": "Social sharing has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The social sharing ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "social_sharing has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "social-sharings"
+        ]
+      },
+      "get": {
+        "summary": "Returns social sharing.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "social-sharings"
+        ]
+      }
+    },
+    "/social_sharings/{id}": {
+      "get": {
+        "summary": "Returns social sharing.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "social-sharings"
+        ]
+      },
+      "put": {
+        "summary": "Update social sharing.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "social_sharing has been updated"
+          }
+        },
+        "tags": [
+          "social-sharings"
+        ]
+      },
+      "delete": {
+        "summary": "Delete social sharing.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Social sharing with id has been deleted."
+          }
+        },
+        "tags": [
+          "social-sharings"
+        ]
+      }
+    },
+    "/subscriptions": {
+      "post": {
+        "summary": "Create subscription plan.",
+        "responses": {
+          "200": {
+            "description": "Subscription plan created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The subscription ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Subscription plan created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "get": {
+        "summary": "Returns subscriptions.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/subscriptions/{id}": {
+      "get": {
+        "summary": "Returns subscription.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "put": {
+        "summary": "Update subscription.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription plan has been updated"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "delete": {
+        "summary": "Delete subscription.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription plan with id has been deleted."
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/tax_codes": {
+      "post": {
+        "summary": "Create tax code.",
+        "responses": {
+          "200": {
+            "description": "Tax code has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The tax code ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "tax_codes has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "tax-codes"
+        ]
+      },
+      "get": {
+        "summary": "Returns tax codes.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "tax-codes"
+        ]
+      }
+    },
+    "/tax_codes/{id}": {
+      "get": {
+        "summary": "Returns tax code.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "tax-codes"
+        ]
+      },
+      "put": {
+        "summary": "Update tax code.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "tax_codes has been updated"
+          }
+        },
+        "tags": [
+          "tax-codes"
+        ]
+      }
+    },
+    "/template_categories": {
+      "post": {
+        "summary": "Create template category.",
+        "responses": {
+          "200": {
+            "description": "Template category created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The subscription ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "template_category created."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "name field is required."
+          }
+        },
+        "tags": [
+          "template-categories"
+        ]
+      },
+      "get": {
+        "summary": "Returns template categories.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "template-categories"
+        ]
+      }
+    },
+    "/template_categories/{id}": {
+      "get": {
+        "summary": "Returns template catergory.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "template-categories"
+        ]
+      },
+      "put": {
+        "summary": "Update template catergory.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template category has been updated"
+          }
+        },
+        "tags": [
+          "template-categories"
+        ]
+      },
+      "delete": {
+        "summary": "Delete template catergory.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template category with id has been deleted."
+          }
+        },
+        "tags": [
+          "template-categories"
+        ]
+      }
+    },
+    "/templates": {
+      "post": {
+        "summary": "Create template.",
+        "responses": {
+          "200": {
+            "description": "Template has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The template ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "template has been created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "templates"
+        ]
+      },
+      "get": {
+        "summary": "Returns templates.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "templates"
+        ]
+      }
+    },
+    "/templates/{id}": {
+      "get": {
+        "summary": "Returns template.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "templates"
+        ]
+      },
+      "put": {
+        "summary": "Update template.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template category has been updated"
+          }
+        },
+        "tags": [
+          "templates"
+        ]
+      },
+      "delete": {
+        "summary": "Delete template.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template with id has been deleted."
+          }
+        },
+        "tags": [
+          "templates"
+        ]
+      }
+    },
+    "/twilio_requests": {
+      "post": {
+        "summary": "Create twilio request.",
+        "responses": {
+          "200": {
+            "description": "Twilio request has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The twilio request ID."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "twilio_request created."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "twilio-requests"
+        ]
+      },
+      "get": {
+        "summary": "Returns twilio requests.",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "twilio-requests"
+        ]
+      }
+    },
+    "/twilio_requests/{id}": {
+      "get": {
+        "summary": "Returns twilio request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        },
+        "tags": [
+          "twilio-requests"
+        ]
+      },
+      "put": {
+        "summary": "Update twilio request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "twilio_request has been updated"
+          }
+        },
+        "tags": [
+          "twilio-requests"
+        ]
+      },
+      "delete": {
+        "summary": "Delete twilio request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Twilio request with id has been deleted."
+          }
+        },
+        "tags": [
+          "twilio-requests"
+        ]
+      }
+    },
+    "/admin/qa/manifests/{id}": {
+      "get": {
+        "summary": "Check the manifest and show incomplete and complete orders to the QA.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "incompletedOrderIds": {
+                      "type": "array",
+                      "description": "An orders without 'complete' status"
+                    },
+                    "completedOrderIds": {
+                      "type": "array",
+                      "description": "An orders with 'complete' status"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Error in the entered manifest ID - check and enter the manifest ID again"
+                  }
+                }
+              }
+            },
+            "description": "Id error."
+          }
+        },
+        "tags": [
+          "QA"
+        ]
+      },
+      "delete": {
+        "summary": "Remove orders from the manifest to continue processing orders.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "orderIds": {
+                  "type": "array",
+                  "description": "An array of ids"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Orders # {orderIds} has been removed from the process."
+          }
+        },
+        "tags": [
+          "QA"
+        ]
+      }
+    },
+    "/admin/qa/manifests/{id}/review": {
+      "put": {
+        "summary": "Assigns the manifest and it's orders to the employee.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manifest # {mId} is assigned to employee # {empId}"
+          }
+        },
+        "tags": [
+          "QA"
+        ]
+      }
+    },
+    "/admin/qa/manifests/{id}/submit": {
+      "put": {
+        "summary": "Send to process selected redo orders or complete the manifest.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "rejectedOrderIds": {
+                  "type": "array",
+                  "description": "An array of redo ids"
+                },
+                "skippedOrderIds": {
+                  "type": "array",
+                  "description": "An array of already rejected or accepted order ids"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manifest successfully completed. Accepted: {totalAccepted}, Rejected: {totalRejected}."
+          }
+        },
+        "tags": [
+          "QA"
+        ]
+      }
+    },
+    "/user/auth/checkLogin": {
+      "get": {
+        "summary": "Check whether a user is logged in",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/loginParam"
+          }
+        ]
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/getUser": {
+      "get": {
+        "summary": "Get a user's data. The data is retrieved from the session automatically."
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/token/{token}": {
+      "post": {
+        "summary": "Do logging process by a user's token.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/hashParam"
+          }
+        ]
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/activation/{hash}": {
+      "post": {
+        "summary": "A user's activation process.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/hashParam"
+          }
+        ]
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/setTestMode": {
+      "post": {
+        "summary": "Update a user's test_mode property.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "test_mode": {
+                  "type": "number",
+                  "description": "0 or 1."
+                }
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/registration": {
+      "post": {
+        "summary": "Sign up form.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "login": {
+                  "type": "sting",
+                  "description": "An email.",
+                  "required": true
+                },
+                "password": {
+                  "type": "sting",
+                  "description": "A password.",
+                  "required": true
+                },
+                "password_confirmation": {
+                  "type": "sting",
+                  "description": "A password confirmation.",
+                  "required": true
+                },
+                "fname": {
+                  "type": "sting",
+                  "description": "A First name.",
+                  "required": true
+                },
+                "lname": {
+                  "type": "sting",
+                  "description": "A Last name.",
+                  "required": true
+                },
+                "discount_code": {
+                  "type": "sting",
+                  "description": "A discount code."
+                },
+                "silent": {
+                  "type": "boolean",
+                  "description": "A flag to registrate a user with status 'active'."
+                },
+                "silent_add": {
+                  "type": "boolean",
+                  "description": "A flag to registrate a user with status 'active'."
+                }
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/authorization": {
+      "post": {
+        "summary": "Sign in form.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "login": {
+                  "type": "sting",
+                  "description": "An email.",
+                  "required": true
+                },
+                "password": {
+                  "type": "sting",
+                  "description": "A password.",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/resetPasswordRequest": {
+      "post": {
+        "summary": "Send a reset password request to the user's email.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/loginParam"
+          }
+        ]
+      },
+      "tags": [
+        "auth"
+      ]
+    },
+    "/user/auth/resetPasswordConfirm/{hash}": {
+      "get": {
+        "summary": "Get a user's hash via email link.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/hashParam"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Get a user's hash via email link.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "properties": {
+                "password": {
+                  "type": "sting",
+                  "description": "A password.",
+                  "required": true
+                },
+                "password_confirm": {
+                  "type": "sting",
+                  "description": "A password confirmation.",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tags": [
+      "auth"
+    ]
+  },
+  "components": {
+    "parameters": {
+      "IdParam": {
+        "name": "id",
+        "in": "path",
+        "description": "Id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "hashParam": {
+        "name": "hash",
+        "in": "path",
+        "description": "Hash key to identify a user in db.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "loginParam": {
+        "name": "login",
+        "in": "query",
+        "required": true,
+        "description": "A user's login",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ModelParam": {
+        "name": "model",
+        "in": "path",
+        "description": "Model",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

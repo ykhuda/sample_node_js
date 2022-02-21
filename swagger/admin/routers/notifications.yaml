@@ -1,0 +1,121 @@
+id:
+  get:
+    summary: Get a natification by id.
+    tags:
+      - Notification
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    social_sharing:
+                      $ref: '../_schemas.yaml#/notificationGet'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a natification by id.
+    tags:
+      - Notification
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/notificationUpdate'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Notification has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a natification by id.
+    tags:
+      - Notification
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Notifications with id :id has been deleted.
+notifications:
+  post:
+    summary: Create a new Notification.
+    tags:
+      - Notification
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/notificationUpdate'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Successfully added a new notification.
+                id:
+                  type: integer
+  get:
+    summary: Get all notifications.
+    tags:
+      - Notification
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/notificationGet'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

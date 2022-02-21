@@ -1,0 +1,135 @@
+getCustomizedCard:
+  get:
+    tags:
+      - Custom Cards
+    summary: >-
+      Get customized card
+    description: >-
+      Get custom/customized card.
+    operationId: get_customized_card
+    security:
+      - ApiKeyAuth: [ ]
+    parameters:
+      - name: id
+        in: query
+        description: card ID
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - card
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                card:
+                  $ref: '../_schemas.yaml#/CardAndCustomCard'
+                meta:
+                  type: array
+                  deprecated: true
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      card_id:
+                        type: integer
+                      products:
+                        type: object
+      '400':
+        $ref: '../_responses.yaml#/400NoUid'
+      '404':
+        $ref: '../_responses.yaml#/404Design'
+getCustomCard:
+  get:
+    tags:
+      - Custom Cards
+    summary: >-
+      Get custom card
+    description: >-
+      Get custom card
+    operationId: get_custom_card
+    security:
+      - ApiKeyAuth: [ ]
+    parameters:
+      - name: id
+        in: query
+        description: card ID
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - card
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                card:
+                  $ref: '../_schemas.yaml#/Card'
+      '400':
+        $ref: '../_responses.yaml#/400NoUid'
+      '404':
+        $ref: '../_responses.yaml#/404Design'
+delete:
+  post:
+    tags:
+      - Custom Cards
+    summary: >-
+      Soft delete custom card
+    description: >-
+      Delete custom card.
+    security:
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: card id
+            required:
+              - id
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - card
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                card:
+                  $ref: '../_schemas.yaml#/Card'
+      '400':
+        $ref: '../_responses.yaml#/400NoUid'
+      '404':
+        $ref: '../_responses.yaml#/404Design'

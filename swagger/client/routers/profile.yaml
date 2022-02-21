@@ -1,0 +1,922 @@
+addRecipient:
+  post:
+    summary: Add a recipient address to user addressbook
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              state:
+                type: string
+              country_id:
+                type: string
+              first_name:
+                type: string
+              last_name:
+                type: string
+              name:
+                type: string
+              address1:
+                type: string
+              address2:
+                type: string
+              city:
+                type: string
+              zip:
+                type: string
+              birthday:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                address_id:
+                  type: number
+                  description: 'example: 108926'
+              example:
+                httpCode: 200
+                status: OK
+                address_id: 108926
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - Error verifying the address.
+                    - The address you have entered cannot be found.
+                    - Error response from shippingapis
+                    - Invalid Zip Code.
+                    - Invalid State.,
+                    - Looks like the address you entered is incorrect. Please check Address 2.
+                    - More information is needed (such as an apartment, suite, or box number) to match to a specific address.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+updateRecipient:
+  put:
+    summary: Update a recipient address to user addressbook
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              state:
+                type: string
+              country_id:
+                type: string
+              first_name:
+                type: string
+              last_name:
+                type: string
+              name:
+                type: string
+              address1:
+                type: string
+              address2:
+                type: string
+              city:
+                type: string
+              zip:
+                type: string
+              birthday:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                address_id:
+                  type: number
+                  description: 'example: 108926'
+              example:
+                httpCode: 200
+                status: OK
+                address_id: 108926
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - Error verifying the address.
+                    - The address you have entered cannot be found.
+                    - Error response from shippingapis
+                    - Invalid Zip Code.
+                    - Invalid State.,
+                    - Looks like the address you entered is incorrect. Please check Address 2.
+                    - More information is needed (such as an apartment, suite, or box number) to match to a specific address.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+deleteRecipient:
+  post:
+    summary: Delete user`s recipient address
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              address_id:
+                type: number
+              address_ids:
+                type: array
+                items:
+                  type: 'integer'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                address_id:
+                  type: number
+                  description: 'example: 108926'
+                address_ids:
+                  type: array
+                  description: 'example: [108926]'
+              example:
+                httpCode: 200
+                status: OK
+                default_return_address_id: 108926
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - Address id error
+                    - no such address.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+recipientsList:
+  get:
+    summary: Get recipients addresses list
+    tags:
+      - AddressBook
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                addresses:
+                  type: array
+                  description: recipients addresses list
+              example:
+                addresses:
+                  - id: 108894
+                    name: Farci Trier
+                    first_name: Farci
+                    last_name: Trier
+                    business_name: business name
+                    address1: Popkins Court
+                    address2: Popkins Court2
+                    city: Woodstock
+                    states: MD
+                    zip: 644000
+                    country_id: 1
+                    country: United States
+                    birthday: 00/00/00
+                    country_obj:
+                      id: 1
+                      name: United States
+                      delivery_cost: 0.55
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+createAddress:
+  post:
+    summary: Add new user`s address
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              default:
+                type: boolean
+              name:
+                type: string
+              first_name:
+                type: string
+              last_name:
+                type: string
+              business_name:
+                type: string
+              address1:
+                type: string
+              address2:
+                type: string
+              city:
+                type: string
+              state:
+                type: string
+              zip:
+                type: string
+              country_id:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                address_id:
+                  type: number
+                  description: 'example: 108926'
+              example:
+                httpCode: 200
+                status: OK
+                address:
+                  id: 108900
+                  default: true
+                  name: First Laster
+                  first_name: First
+                  last_name: Laster
+                  business_name: business name
+                  address1: USA fl. 13
+                  address2: USA fl. 14
+                  city: New York
+                  state: AK
+                  zip: 644100
+                  country_id: 1
+                  country: United States
+                  country_obj:
+                    id: 1
+                    name: United States
+                    delivery_cost: 0.55
+      '400':
+        $ref: '../_responses.yaml#/address400'
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+updateAddress:
+  put:
+    summary: Update user's address
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              address1:
+                type: string
+              address2:
+                type: string
+              city:
+                type: string
+              zip:
+                type: string
+              state:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                addresses:
+                  type: array
+                  items:
+                    $ref: '../_schemas.yaml#/address'
+      '400':
+        $ref: '../_responses.yaml#/address400'
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+deleteAddress:
+  post:
+    summary: Delete user's address
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              oneOf:
+                - address_id:
+                    type: integer
+                - address_ids:
+                    type: array
+                    items:
+                      type: number
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+address:
+  get:
+    summary: Get a user's address info
+    tags:
+      - Profile
+    properties:
+      - $ref: '../_schemas.yaml#/authHeader'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                billing_info:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                    zip:
+                      type: string
+                    country:
+                      type: string
+                    country_id:
+                      type: integer
+                subscription:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    delivery_cost:
+                      type: integer
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+setDefaultAddress:
+  post:
+    summary: set default address info
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - bad id.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+listAddresses:
+  get:
+    summary: Get a user's addresses info
+    tags:
+      - Profile
+    properties:
+      - $ref: '../_schemas.yaml#/authHeader'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                addressses:
+                  type: array
+                  items:
+                    $ref: '../_schemas.yaml#/address'
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+updateBillingInfo:
+  post:
+    summary: Update a user's billing info
+    tags:
+      - AddressBook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              country_id:
+                type: integer
+              address:
+                type: string
+              zip:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - Country is required.
+                    - Address is required.
+                    - Zip is required.
+                    - No such country.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+shareOptions:
+  get:
+    summary: Get share options links
+    tags:
+      - Profile
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                optiions:
+                  type: object
+                  properties:
+                    option:
+                      type: object
+                      properties:
+                        link: string
+                        text: string
+              example:
+                httpCode: 200
+                status: ok
+                options:
+                  linkName:
+                    link: https://example.com
+                    text: text sample
+settings:
+  get:
+    summary: Get a user's settings
+    tags:
+      - Profile
+    properties:
+      - $ref: '../_schemas.yaml#/authHeader'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                credit1:
+                  type: integer
+                credit2:
+                  type: integer
+                expiring_credit2:
+                  type: integer
+                nearest_expiring_credit2:
+                  type: object
+                  properties:
+                    expires_at:
+                      type: string
+                      format: date-time
+                    amount:
+                      type: integer
+                default_credit_card:
+                  type: object
+                billing_info:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                    zip:
+                      type: string
+                    country:
+                      type: string
+                    country_id:
+                      type: integer
+                subscription:
+                  type: object
+                  properties:
+                    credit_card_id:
+                      enum:
+                        - undefined
+                        - number
+                    payment_method_type:
+                      enum:
+                        - apple_pay
+                        - credit_card
+                        - none
+                has_no_password:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+                test_mode:
+                  type: integer
+                logged_with:
+                  type: string
+                  enum:
+                    - google
+                    - facebook
+                    - email
+                    - null
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+actionChangeEmail:
+  post:
+    tags:
+      - Profile
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+              password:
+                type: string
+              new_login:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                message:
+                  type: string
+                  enum:
+                    - The email has been changed.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - The accaunt doesn\'t use password.
+                    - Password is required.
+                    - Login is required
+                    - New login is required.
+                    - Entered login doesn\'t match your current login.
+                    - User with such login is already exist.
+changePassword:
+  post:
+    tags:
+      - Profile
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              old_password:
+                required: true
+                type: string
+              new_password:
+                required: true
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                message:
+                  type: string
+                  enum:
+                    - Password has been changed.
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 400
+                  description: Http status code
+                status:
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - The accaunt doesn\'t use password.
+                    - Old password is required.
+                    - New password is required.
+                    - Entered passwords are the same.
+signatures:
+  get:
+    summary: Get a user's signatures by user_id
+    tags:
+      - Profile
+    properties:
+      - $ref: '../_schemas.yaml#/authHeader'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                signatures:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      preview:
+                        type: string
+                        description: img url
+      '401':
+        $ref: '../_responses.yaml#/noAuth'
+getAuthorizeNetInfo:
+  get:
+    tags:
+      - Profile
+    summary: >-
+      Return Authorize.Net credentials
+    description: >-
+      Return Authorize.Net CLIENT_KEY, API_LOGIN_ID. Requires secret header. `AuthorizeNetSecret: JS1fAb9wYfBYS1UW` (Staging: `AuthorizeNetSecret: Simon`)
+    operationId: get_authorizenet_info
+    parameters:
+      - in: header
+        name: AuthorizeNetSecret
+        example: Simon
+        schema:
+          type: string
+        required: false
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                authorizenet_info:
+                  type: object
+                  properties:
+                    transaction_key:
+                      type: string
+                      example: kbmV4mnfYYQ4Midp
+                      deprecated: true
+                    client_key:
+                      type: string
+                      example: e7FjohxU76ZRjgxv1yush4PS65uphIqZ
+                    login_id:
+                      type: string
+                      example: INBU5yRAB
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - authorize.net credentials are not defined

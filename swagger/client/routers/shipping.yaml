@@ -1,0 +1,58 @@
+methods:
+  get:
+    tags:
+      - Shipping
+    summary: >-
+      Get shipping methods list
+    description: >-
+      Get shipping methods list
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: Shipping methods list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                methods:
+                  $ref: '../_schemas.yaml#/Methods'
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'
+rates:
+  get:
+    tags:
+      - Shipping
+    summary: >-
+      Get shipping rates list
+    description: >-
+      Get shipping rates list
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: Shipping rates list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                list:
+                  $ref: '../_schemas.yaml#/Rates'
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'

@@ -1,0 +1,150 @@
+id:
+  get:
+    summary: Check the manifest and show its incomplete and complete orders.
+    tags:
+      - QA
+    parameters:
+      - $ref: '../_schemas.yaml#/idParam'
+#      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                incompletedOrderIds:
+                  type: array
+                  description: An orders without 'complete' status
+                completedOrderIds:
+                  type: array
+                  description: An orders with 'complete' status
+              example:
+                incompletedOrderIds:
+                  - 40034
+                  - 40035
+                  - 40051
+                completedOrderIds:
+                  - 40021
+                  - 40025
+      '400':
+        $ref: '../_responses.yaml#/qa400'
+      '404':
+        $ref: '../_responses.yaml#/qa404'
+  delete:
+    summary: Remove orders from the manifest to continue processing orders.
+    tags:
+      - QA
+    parameters:
+      - $ref: '../_schemas.yaml#/idParam'
+#      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              orderIds:
+                type: array
+                items:
+                  type: integer
+                example:
+                  - 40034
+                  - 40035
+                  - 40051
+    responses:
+      '200':
+        description: 'OK'
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - 'Orders # :orderIds has been removed from the process.'
+              example: 
+                message: 'Orders # 40034, 40035, 40051 has been removed from the process.'
+review:
+  put:
+    summary: Assigns the manifest and it's orders to the employee.
+    tags:
+      - QA
+    parameters:
+      - $ref: '../_schemas.yaml#/idParam'
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - 'Manifest # :mId is assigned to employee # :id'
+              example: 
+                message: 'Manifest # 1914 is assigned to employee # 24'
+      '404':
+        $ref: '../_responses.yaml#/qa404'
+      '400':
+        $ref: '../_responses.yaml#/qa400'
+submit:
+  put:
+    summary: Send to process selected redo orders or complete the manifest.
+    tags:
+      - QA
+    parameters:
+      - $ref: '../_schemas.yaml#/idParam'
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              rejectedOrderIds:
+                description: An array of redo ids. The orders and its children will be copied.
+                $ref: '../_schemas.yaml#/qaOrderArray'
+              skippedOrderIds:
+                description: The orders will be deleted from the manifest, manifest_id will be set to null.
+                $ref: '../_schemas.yaml#/qaOrderArray'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              oneOf:
+                - type: object
+                  properties:
+                    message:
+                      type: string
+                      enum:
+                        - 'Manifest successfully completed. Accepted: :totalAccepted, Rejected: :totalRejected.'
+                      example: 'Manifest successfully completed. Accepted: 4, Rejected: 2'
+                - type: object
+                  properties:
+                    message:
+                      type: string
+                      enum:
+                        - 'There are some incompleted or already rejected orders'
+                    incompletedOrderIds:
+                      description: An array of orders without 'complete' status
+                      $ref: '../_schemas.yaml#/qaOrderArray'
+                    noWaitingOrderIds:
+                      description: An array of orders without 'waiting' qa_status
+                      $ref: '../_schemas.yaml#/qaOrderArray'
+                    continueProcessOrderIds:
+                      description: An array of redo orders 
+                      $ref: '../_schemas.yaml#/qaOrderArray'
+      '404':
+        $ref: '../_responses.yaml#/qa404'
+      '400':
+        $ref: '../_responses.yaml#/qa400'

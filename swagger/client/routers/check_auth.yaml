@@ -1,0 +1,43 @@
+auth:
+  get:
+    tags:
+      - Auth
+    summary: >-
+      Check auth
+    description: >-
+      Check auth
+    operationId: check_auth
+    security:
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                login:
+                  type: string
+                  example: example@example.com
+                has_no_password:
+                  type: boolean
+                logged_with:
+                  type: string
+                  enum:
+                    - google
+                    - facebook
+                    - email
+                test_mode:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+      '400':
+        $ref: '../_responses.yaml#/400NoUid'

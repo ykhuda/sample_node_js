@@ -1,0 +1,123 @@
+id:
+  get:
+    summary: Get a country by id.
+    tags:
+      - Country
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    country:
+                      $ref: '../_schemas.yaml#/country'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a country by id.
+    tags:
+      - Country
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/country'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Country has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a country by id.
+    tags:
+      - Country
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Country with id :id has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+countries:
+  post:
+    summary: Create a new country.
+    tags:
+      - Country
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/country'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Successfully added a new country.
+                id:
+                  type: integer
+  get:
+    summary: Get all countries.
+    tags:
+      - Country
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/country'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

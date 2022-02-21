@@ -1,0 +1,269 @@
+login:
+  get:
+    summary: Login page.
+    tags:
+      - Auth
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - You are on the login page. Please log in or register. App version is :version
+  post:
+    summary: Sign in form.
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: username or email
+              password:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              description: A user's data
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Login data is invalid.
+                    - Password is incorrect.
+                    - Verizon user.
+                    - Your account is not activated. Contact Admin to activate your account.
+                    - Your account is blocked.
+logout:
+  post:
+    summary: Log out a user. Destroy session.
+    tags:
+      - Auth
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                logout:
+                  type: boolean
+                  enum:
+                    - true
+registration:
+  post:
+    summary: Sign up form
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+              username:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                register:
+                  type: boolean
+                  enum:
+                    - true
+                message:
+                  type: string
+                  enum:
+                    - Thank you for your registration. Contact Admin to activate your account.
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Username field is required.
+                    - Email field is required.
+                    - Password is required.
+                    - :login is already used.
+                    - :email is already used.
+reset:
+  post:
+    summary: Generate reset token and send it to the admin's email
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - 'password'
+                message:
+                  type: string
+                  enum:
+                    - Please check your email. An instructions has been sent to your email address.
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Email is required.
+                    - Bad credentials.
+token:
+  get:
+    summary: Reset token
+    tags:
+      - Auth
+    parameters:
+      - token:
+        in: path
+        name: hash
+        description: A reset token
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+  put:
+    summary: Confirm reset password.
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+              passwordConfirmation:
+                type: string
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Success. Your password has been changed.
+      '401':
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum:
+                    - 401
+                  description: Http status code
+                status: 
+                  type: string
+                  enum:
+                    - error
+                message:
+                  type: string
+                  enum:
+                    - Password is required for this action.
+                    - Passwords you\'ve provided doesn\'t match.
+                    - Bad token.
+                    - Reset token is expired.

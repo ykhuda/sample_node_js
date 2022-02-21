@@ -1,0 +1,281 @@
+noAuth:
+  description: UNAUTHORIZED
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 401
+            description: Http status code
+          status:
+            type: string
+            enum:
+              - error
+          message:
+            type: string
+        example:
+          httpCode: 401
+          status: error
+          message: 'no auth'
+address400:
+  description: INVALID DATA
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            enum:
+              - 400
+            description: Http status code
+          status:
+            type: string
+            description: error
+          message:
+            type: string
+            enum:
+              - Error verifying the address.
+              - The address you have entered cannot be found.
+              - Error response from shippingapis
+              - Invalid Zip Code.
+              - Invalid State.,
+              - Looks like the address you entered is incorrect. Please check Address 2.
+              - More information is needed (such as an apartment, suite, or box number) to match to a specific address.
+samples400:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 400
+          error:
+            type: string
+            description: error description
+            enum:
+              - empty first name
+              - empty last name
+              - empty email
+              - Invalid Email
+              - empty phone
+              - empty address 1
+              - empty city
+              - empty zip
+400NoUid:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 403
+          error:
+            type: string
+            description: error description
+            enum:
+              - no uid
+404Design:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 404
+          error:
+            type: string
+            description: error description
+            enum:
+              - Card id is not set.
+              - Card is not found.
+              - Card is not in customized category.
+              - No access.
+200:
+  description: successful
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 200
+          status:
+            type: string
+            example: ok
+401NoAuth:
+  description: No auth
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 401
+          error:
+            type: string
+            description: error description
+            enum:
+              - no auth
+updateBasket200:
+  description: successful
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 200
+          status:
+            type: string
+            example: ok
+          order_id:
+            type: integer
+            example: 725563
+updateBasket400:
+  description: no uid
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 400
+          error:
+            type: string
+            description: error description
+            enum:
+              - no uid
+              - invalid basket item id
+              - basket item not found
+              - card id error
+              - not found
+              - address error
+              - message error
+              - font error
+              - insufficient quantity
+              - no such card
+              - no such gift card
+              - no such insert
+              - Coupon already used
+              - Coupon already expired
+              - addresses count error
+              - card is not available for free
+              - no free cards
+              - cannot buy
+              - no return info
+              - no such address
+              - no such country
+updateBasket500:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          success:
+            type: boolean
+            example: false
+          code:
+            type: integer
+            example: 500
+          message:
+            type: string
+            description: error description
+            enum:
+              - error placing order (recipient address not found)
+              - error placing main order
+              - error placing child orders
+              - error placing order
+              - error placing order (saving from address)
+              - error placing order (saving to address)
+CreditCard400:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 400
+          error:
+            type: string
+            description: error description
+            enum:
+              - no uid
+              - credit card id error
+              - no such credit card
+CategoryIdError400:
+  description: Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 400
+          error:
+            type: string
+            description: error description
+            enum:
+              - category id error
+AccessDenied:
+  description: Access denied
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 403
+          error:
+            type: string
+            description: error description
+            enum:
+              - Access denied
+RequestError:
+  description: no order id
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 422
+          error:
+            type: string
+            description: error description
+            enum:
+              - request error
+OrderNotFound:
+  description: not found
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          httpCode:
+            type: integer
+            example: 404
+          error:
+            type: string
+            description: error description
+            enum:
+              - order not found

@@ -1,0 +1,30 @@
+list:
+  get:
+    tags:
+      - Insert
+    summary: >-
+      Get inserts list
+    description: >-
+      Get inserts list
+    operationId: list_inserts
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    responses:
+      '200':
+        description: Inserts list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                inserts:
+                  $ref: '../_schemas.yaml#/Inserts'
+      '401':
+        $ref: '../_responses.yaml#/401NoAuth'

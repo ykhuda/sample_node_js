@@ -1,0 +1,236 @@
+methods:
+  get:
+    tags:
+      - Shipping
+    summary: Get shipping methods list
+    description: Get shipping methods list
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: Shipping methods list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                list:
+                  type: array
+                  items:
+                    $ref: '../_schemas.yaml#/NewMethods'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  post:
+    summary: Create a new shipping method.
+    tags:
+      - Shipping
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/methodsCreate'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new:
+                  $ref: '../_schemas.yaml#/NewMethods'
+      '401':
+        $ref: '../_responses.yaml#/401MethodCreate'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  put:
+    summary: Update shipping method.
+    tags:
+      - Shipping
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/NewMethods'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Shipping method with id {id} has been updated.
+      '401':
+        $ref: '../_responses.yaml#/401MethodUpdate'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+methods_id:
+  get:
+    tags:
+      - Shipping
+    summary: Get shipping method by id
+    description: Get shipping method by id
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: Shipping method by id
+        content:
+          application/json:
+            schema:
+              $ref: '../_schemas.yaml#/NewMethods'
+      '404':
+        $ref: '../_responses.yaml#/404NotID'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  delete:
+    tags:
+      - Shipping
+    summary: Delete shipping method by id
+    description: Delete shipping method by id
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: Delete method by id
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Shipping method with id {id} has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/404NotID'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+rates:
+  get:
+    tags:
+      - Shipping
+    summary: Get shipping rates list
+    description: Get shipping rates list
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: Shipping methods list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                list:
+                  type: array
+                  items:
+                    $ref: '../_schemas.yaml#/NewRates'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  post:
+    summary: Create a new shipping rate.
+    tags:
+      - Shipping
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/rateCreate'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new:
+                  $ref: '../_schemas.yaml#/NewRates'
+      '401':
+        $ref: '../_responses.yaml#/401RateCreate'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  put:
+    summary: Update shipping rate.
+    tags:
+      - Shipping
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/NewRates'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Shipping rate with id {id} has been updated.
+      '401':
+        $ref: '../_responses.yaml#/401RateUpdate'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+rates_id:
+  get:
+    tags:
+      - Shipping
+    summary: Get shipping rate by id
+    description: Get shipping rate by id
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: Shipping rate by id
+        content:
+          application/json:
+            schema:
+              $ref: '../_schemas.yaml#/NewRates'
+      '404':
+        $ref: '../_responses.yaml#/404NotID'
+      '440':
+        $ref: '../_responses.yaml#/session440'
+  delete:
+    tags:
+      - Shipping
+    summary: Delete shipping rate by id
+    description: Delete shipping rate by id
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: Delete rate by id
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Shipping rate with id {id} has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/404NotID'
+      '440':
+        $ref: '../_responses.yaml#/session440'

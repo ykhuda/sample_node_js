@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: API
+  description: This is an API documentation for a Project_name Admin.
+  version: 1.0.0
+servers:
+  - url: 'https://Project_name.com/api/v1/admin'
+    description: Test server
+  - url: http://localhost:3000/api/v1/admin
+    description: Development server
+paths:
+  ### QA Routers
+  /qa/manifests/{id}/submit:
+    $ref: './routers/qa.yaml#/submit'
+  /qa/manifests/{id}/review:
+    $ref: './routers/qa.yaml#/review'
+  /qa/manifests/{id}:
+    $ref: './routers/qa.yaml#/id'
+  ### Auth
+  /auth/login:
+    $ref: './routers/auth.yaml#/login'
+  /auth/logout:
+    $ref: './routers/auth.yaml#/logout'
+  /auth/registration:
+    $ref: './routers/auth.yaml#/registration'
+  /auth/reset:
+    $ref: './routers/auth.yaml#/reset'
+  /auth/reset/:token:
+    $ref: './routers/auth.yaml#/token'
+  ### Profile
+  /profile/{id}:
+    $ref: './routers/profile.yaml#/id'
+  /profile/{id}/changePass:
+    $ref: './routers/profile.yaml#/changePass'
+  /profile/{id}/edit:
+    $ref: './routers/profile.yaml#/edit'
+  ### Addresses
+  /addresses/{id}:
+    $ref: './routers/addresses.yaml#/id'
+  /addresses:
+    $ref: './routers/addresses.yaml#/addresses'
+  ### User Groups
+  /client_groups/{id}:
+    $ref: './routers/userGroups.yaml#/id'
+  /client_groups:
+    $ref: './routers/userGroups.yaml#/userGroups'
+  ### Countries
+  /countries/{id}:
+    $ref: './routers/countries.yaml#/id'
+  /countries:
+    $ref: './routers/countries.yaml#/countries'
+  ### Denominations
+  /denominations/{id}:
+    $ref: './routers/denominations.yaml#/id'
+  /denominations:
+    $ref: './routers/denominations.yaml#/denominations'
+  ### Holidays
+  /holidays/{id}:
+    $ref: './routers/holidays.yaml#/id'
+  /holidays:
+    $ref: './routers/holidays.yaml#/holidays'
+  ### Tax Codes
+  /tax_codes/{id}:
+    $ref: './routers/taxCodes.yaml#/id'
+  /tax_codes:
+    $ref: './routers/taxCodes.yaml#/taxCodes'
+  ### Discount Codes
+  /discount_codes/{id}:
+    $ref: './routers/discountCodes.yaml#/id'
+  /discount_codes:
+    $ref: './routers/discountCodes.yaml#/discountCodes'
+  ### Discount Rules
+  /discount_rules/{id}:
+    $ref: './routers/discountRules.yaml#/id'
+  /discount_rules:
+    $ref: './routers/discountRules.yaml#/discountRules'
+  ### Share Options
+  /share_options/{id}:
+    $ref: './routers/shareOptions.yaml#/id'
+  /share_options:
+    $ref: './routers/shareOptions.yaml#/shareOptions'
+  ### Coupons
+  /coupons/{id}:
+    $ref: './routers/coupons.yaml#/id'
+  /coupons:
+    $ref: './routers/coupons.yaml#/coupons'
+  ### Subscriptions
+  /subscriptions/{id}:
+    $ref: './routers/subscriptions.yaml#/id'
+  /subscriptions:
+    $ref: './routers/subscriptions.yaml#/subscriptions'
+  ### Twilio Requests
+  /twilio_requests/{id}:
+    $ref: './routers/twilioRequests.yaml#/id'
+  /twilio_requests:
+    $ref: './routers/twilioRequests.yaml#/twilioRequests'
+  ### Gift Cards
+  /gift_cards/{id}:
+    $ref: './routers/giftCards.yaml#/id'
+  /gift_cards:
+    $ref: './routers/giftCards.yaml#/giftCards'
+  ### Fonts
+  /fonts/{id}:
+    $ref: './routers/fonts.yaml#/id'
+  /fonts:
+    $ref: './routers/fonts.yaml#/fonts'
+  ### Social Sharing
+  /social_sharing/{id}:
+    $ref: './routers/socialSharings.yaml#/id'
+  /social_sharing:
+    $ref: './routers/socialSharings.yaml#/socialSharings'
+  ### Social Sharing
+  /shipping/methods:
+    $ref: './routers/shipping.yaml#/methods'
+  /shipping/methods/{id}:
+    $ref: './routers/shipping.yaml#/methods_id'
+  /shipping/rates:
+    $ref: './routers/shipping.yaml#/rates'
+  /shipping/rates/{id}:
+      $ref: './routers/shipping.yaml#/rates_id'
+  ### Batch Orders
+  /batch_orders/paid:
+    $ref: './routers/batchOrders.yaml#/paid'
+  /batch_orders/generatePdf/{id}:
+    $ref: './routers/batchOrders.yaml#/generatePdf'
+  /batch_orders/manifest:
+    $ref: './routers/batchOrders.yaml#/manifest'
+  /batch_orders/in_work:
+    $ref: './routers/batchOrders.yaml#/in_work'
+  /batch_orders:
+    $ref: './routers/batchOrders.yaml#/batch_orders'
+  /batch_orders/process:
+    $ref: './routers/batchOrders.yaml#/process'
+  /batch_orders/check:
+    $ref: './routers/batchOrders.yaml#/check'
+  /batch_orders/complete:
+    $ref: './routers/batchOrders.yaml#/complete'
+  /batch_orders/discard:
+    $ref: './routers/batchOrders.yaml#/discard'
+  /batch_orders/docx/notes:
+    $ref: './routers/batchOrders.yaml#/notes'
+  /batch_orders/labels/print:
+    $ref: './routers/batchOrders.yaml#/print'
+  /batch_orders/labels/envelopes:
+    $ref: './routers/batchOrders.yaml#/envelopes'
+  /batch_orders/labels/cancel:
+    $ref: './routers/batchOrders.yaml#/cancel'
+  /batch_orders/labels/generate:
+    $ref: './routers/batchOrders.yaml#/generate'
+  /batch_orders/labels/status:
+    $ref: './routers/batchOrders.yaml#/labelStatus'
+  /batch_orders/manifest/status:
+    $ref: './routers/batchOrders.yaml#/manifestStatus'
+  ### Notifications
+  /notifications/{id}:
+    $ref: './routers/notifications.yaml#/id'
+  /notifications:
+    $ref: './routers/notifications.yaml#/notifications'
+  ### User Mails
+  /client_mails/{id}:
+    $ref: './routers/userMails.yaml#/id'
+  /client_mails/{id}/resend:
+    $ref: './routers/userMails.yaml#/resend'
+  /client_mails:
+    $ref: './routers/userMails.yaml#/userMails'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+security:
+  - ApiKeyAuth: [ ]
+
+    ### Categories
+    # /categories/{id}:
+    #   $ref: './routers/categories.yaml#/id'
+    # /categories:
+    #   $ref: './routers/categories.yaml#/categories'

@@ -1,0 +1,500 @@
+list:
+  get:
+    tags:
+      - Subscriptions
+    summary: >-
+      Get subscription plans
+    description: >-
+      Get subscription plans
+    operationId: list_subscriptions
+    security:
+      - { }
+      - uidKey: [ ]
+    responses:
+      '200':
+        description: Subscriptions list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                subscriptions:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      name:
+                        type: string
+                        example: Gold
+                      fee:
+                        type: number
+                        description: recurring payment amount
+                        example: 75.00
+                      period:
+                        type: integer
+                        description: in days
+                        example: 30
+                      credit2:
+                        type: number
+                        description: amount of credits of type 2 billed for the period
+                        example: 75.00
+                      discount:
+                        type: number
+                        description: in percents
+                        example: 12.5
+                      is_best_value:
+                        type: integer
+                        example: 0
+                        enum:
+                          - 0
+                          - 1
+                      description:
+                        type: string
+                      cost_description:
+                        type: string
+                      plan_icon:
+                        type: string
+                        description: image URL
+                        nullable: true
+                        example: https://meg1.jpg
+                      color:
+                        type: string
+                        description: hex value (3 or 6 symbols)
+                        nullable: true
+                        example: c0ffee
+                      update:
+                        type: object
+                        required:
+                          - type
+                        properties:
+                          type:
+                            type: string
+                            example: upgrade
+                            enum:
+                              - upgrade
+                              - downgrade
+                          fee:
+                            type: number
+                            example: 25.22
+                            description: present if type is upgrade
+                          credit2:
+                            type: number
+                            example: 25.22
+                            description: present if type is upgrade
+                      is_current:
+                        type: integer
+                        example: 0
+                        enum:
+                          - 0
+                          - 1
+                      is_new:
+                        type: integer
+                        example: 0
+                        enum:
+                          - 0
+                          - 1
+                      is_original:
+                        type: integer
+                        example: 0
+                        enum:
+                          - 0
+                          - 1
+                      old_description:
+                        type: string
+                      old_cost_description:
+                        type: string
+                current:
+                  type: object
+                  required:
+                    - id
+                    - status
+                    - name
+                    - fee
+                    - period
+                    - credit2
+                    - discount
+                    - extendability
+                    - expires_at
+                    - payment_method_type
+                  properties:
+                    id:
+                      type: integer
+                      example: 15
+                    status:
+                      type: string
+                      enum:
+                        - NEW
+                        - ACTIVE
+                        - EXPIRED
+                        - CANCELED
+                    name:
+                      type: string
+                      example: Gold
+                    fee:
+                      type: number
+                      description: recurring payment amount
+                      example: 75.00
+                    period:
+                      type: integer
+                      description: in days
+                      example: 30
+                    credit2:
+                      type: number
+                      description: amount of credits of type 2 billed for the period
+                      example: 75.00
+                    discount:
+                      type: number
+                      description: in percents
+                      example: 12.5
+                    color:
+                      type: string
+                      description: hex value (3 or 6 symbols)
+                      nullable: true
+                      example: c0ffee
+                    extendability:
+                      type: integer
+                      enum:
+                        - 0
+                        - 1
+                    expires_at:
+                      type: string
+                      example: "2020-03-14 07:35:19"
+                    credit_card_id:
+                      type: integer
+                      example: 1448
+                    payment_method_type:
+                      type: string
+                      enum:
+                        - credit_card
+                        - apple_pay
+                        - none
+
+taxList:
+  get:
+    tags:
+      - Subscriptions
+    summary: >-
+      Get taxes on subscription plans
+    description: >-
+      Get taxes on subscription plans
+    operationId: list_subscription_taxes
+    security:
+      - uidKey: [ ]
+    responses:
+      '200':
+        description: Taxes list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                taxes:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - tax
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      tax:
+                        type: number
+                        description: tax value for this subscription
+                        example: 7.50
+renewalTax:
+  get:
+    tags:
+      - Subscriptions
+    summary: >-
+      Get tax on renewal subscription
+    description: >-
+      Get tax on renewal subscription
+    operationId: renewal_subscription_tax
+    security:
+      - uidKey: [ ]
+    responses:
+      '200':
+        description: Tax on renewal subscription
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                tax:
+                  type: number
+                  description: tax value for renewal current subscription
+                  example: 7.50
+cancel:
+  post:
+    tags:
+      - Subscriptions
+    summary: >-
+      Unsubscribe
+    description: >-
+      Unsubscribe
+    operationId: unsubscribe
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: integer
+                example: 2
+    responses:
+      '200':
+        description: Unsubscription
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - Invalid user subscription ID
+                    - Unable to cancel this subscription
+new:
+  post:
+    tags:
+      - Subscriptions
+    summary: >-
+      Subscribe to the plan
+    description: >-
+      Subscribe to the plan
+    operationId: subscribe
+    security:
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - subscription_id
+            properties:
+              subscription_id:
+                type: integer
+                example: 2
+              credit_card_id:
+                type: integer
+                example: 1449
+                description: required if data_value not present
+              data_value:
+                type: string
+                example: eyJjb2RlIjoiNTBfMl8wNjAwMDUzODU0RkQ4QTAxMThGN0MxRkE5N0UzODk2MDBCNEZCMTYzMjg2NUIyN0M1N0E2Qzg4MDA0ODEyNzYyN0VFMzUwM0IwODg5MTNCRkVDNTNENDQ1QUMxMzFGQUEwRjk2MjBCIiwidG9rZW4iOiI5NTYzODY5OTI2Njk5ODk1NTA0NjAzIiwidiI6IjEuMSJ9
+                description: Apple Pay dataValue, required if credit_card_id not present
+    responses:
+      '200':
+        description: User subscription
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                subscription:
+                  type: object
+                  required:
+                    - id
+                    - status
+                    - name
+                    - fee
+                    - period
+                    - credit2
+                    - discount
+                    - extendability
+                    - starts_at
+                    - expires_at
+                    - payment_method_type
+                  properties:
+                    id:
+                      type: integer
+                      example: 15
+                    status:
+                      type: string
+                      enum:
+                        - NEW
+                        - ACTIVE
+                        - EXPIRED
+                        - CANCELED
+                    name:
+                      type: string
+                      example: Gold
+                    fee:
+                      type: number
+                      description: recurring payment amount
+                      example: 75.00
+                    period:
+                      type: integer
+                      description: in days
+                      example: 30
+                    credit2:
+                      type: number
+                      description: amount of credits of type 2 billed for the period
+                      example: 75.00
+                    discount:
+                      type: number
+                      description: in percents
+                      example: 12.5
+                    color:
+                      type: string
+                      description: hex value (3 or 6 symbols)
+                      nullable: true
+                      example: c0ffee
+                    extendability:
+                      type: integer
+                      enum:
+                        - 0
+                        - 1
+                    starts_at:
+                      type: string
+                      example: "2020-02-13 07:35:19"
+                    expires_at:
+                      type: string
+                      example: "2020-03-14 07:35:19"
+                    credit_card_id:
+                      type: integer
+                      example: 1448
+                    payment_method_type:
+                      type: string
+                      enum:
+                        - credit_card
+                        - apple_pay
+                        - none
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no such subscription
+                    - credit_card id error
+                    - no such credit card
+                    - Apple Pay error
+                    - error payment method
+                    - Can't get transaction id with card payment
+updatePaymentMethod:
+  post:
+    tags:
+      - Subscriptions
+    summary: >-
+      Change your subscription payment method
+    description: >-
+      Change your subscription payment method
+    operationId: update_subscription_payment_method
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: integer
+                example: 2
+              credit_card_id:
+                type: integer
+                example: 1449
+                description: required if data_value not present
+              data_value:
+                type: string
+                example: eyJjb2RlIjoiNTBfMl8wNjAwMDUzODU0RkQ4QTAxMThGN0MxRkE5N0UzODk2MDBCNEZCMTYzMjg2NUIyN0M1N0E2Qzg4MDA0ODEyNzYyN0VFMzUwM0IwODg5MTNCRkVDNTNENDQ1QUMxMzFGQUEwRjk2MjBCIiwidG9rZW4iOiI5NTYzODY5OTI2Njk5ODk1NTA0NjAzIiwidiI6IjEuMSJ9
+                description: Apple Pay dataValue, required if credit_card_id not present
+    responses:
+      '200':
+        description: Successful payment method change
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - Invalid user subscription ID
+                    - credit_card id error
+                    - no such credit card
+                    - Apple Pay error
+                    - error payment method
+                    - Unable to update payment method for this subscription

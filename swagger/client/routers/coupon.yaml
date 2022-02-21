@@ -1,0 +1,54 @@
+getCouponCredit:
+  get:
+    tags:
+      - Coupon
+    summary: >-
+      Get coupon credit
+    description: >-
+      Get coupon credit.
+    operationId: get_coupon_credit
+    security:
+      - uidKey: [ ]
+    parameters:
+      - name: couponCode
+        in: query
+        description: Coupon code
+        required: true
+        example: bigdeal23
+        schema:
+          type: string
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                discountCredit:
+                  type: number
+                  example: 6.66
+      '400':
+        description: no uid
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - invalid coupon code
+                    - Coupon already used
+                    - Coupon already expired

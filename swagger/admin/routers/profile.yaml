@@ -1,0 +1,114 @@
+id:
+  get:
+    summary: Get an employee info and a profile fields
+    tags:
+      - Profile
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+changePass:
+  put:
+    summary: Change employee's password
+    tags:
+      - Profile
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      enum:
+                        - Password has been changed
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum: 
+                      - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - Not all required data is provided.
+                    - Password is too short. Minimum 4 characters.
+                    - Passwords you\'ve provided doesn\'t match.
+edit:
+  put:
+    summary: Change employee's profile info
+    tags:
+      - Profile
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Changes have been saved.
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  enum: 
+                      - 400
+                  description: Http status code
+                status: 
+                  type: string
+                  description: error
+                message:
+                  type: string
+                  enum:
+                    - You\'ve provided a wrong data.
+                    - :username is already used.
+                    - :email is already used.
+
+                    

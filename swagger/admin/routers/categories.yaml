@@ -1,0 +1,165 @@
+id:
+  get:
+    summary: Get a category by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    category:
+                      
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a category by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type: 
+                type: string
+              user_id: 
+                type: integer
+              order_id: 
+                type: integer
+              date_updated: 
+                type: string
+              basket_id: 
+                type: integer
+              country: 
+                type: string
+              country_id: 
+                type: integer
+              birthday: 
+                type: string
+              address_id: 
+                type: integer
+              ext_id: 
+                type: integer
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a category by id.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been deleted.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+addresses:
+  post:
+    summary: Create a new category.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type: 
+                type: string
+              user_id: 
+                type: integer
+              order_id: 
+                type: integer
+              date_updated: 
+                type: string
+              basket_id: 
+                type: integer
+              country: 
+                type: string
+              country_id: 
+                type: integer
+              birthday: 
+                type: string
+              address_id: 
+                type: integer
+              ext_id: 
+                type: integer
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Address has been created.
+                id:
+                  type: integer
+  get:
+    summary: Get all addresses.
+    tags:
+      - Address
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/category'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

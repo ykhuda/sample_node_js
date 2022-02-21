@@ -1,0 +1,215 @@
+feedBack:
+  post:
+    tags:
+      - Default
+    summary: >-
+      Send Feedback
+    description: >-
+      Send Feedback.
+    operationId: send_feedback
+    security:
+      - { }
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: User name
+                example: John Smith
+              email:
+                type: string
+                description: email address
+                example: john@jjf.com
+              message:
+                type: string
+                description: Message
+            required:
+              - name
+              - email
+              - message
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                update:
+                  type: object
+                  properties:
+                    required:
+                      type: boolean
+                      example: true
+                    hard:
+                      type: boolean
+                      example: false
+                tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      placeholder:
+                        type: string
+                        example: firstname
+                      label:
+                        type: string
+                        example: First Name
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - empty name
+                    - empty email
+                    - Invalid Email
+                    - empty message
+whitePaper:
+  post:
+    tags:
+      - Default
+    summary: >-
+      Send request whitepaper
+    description: >-
+      Send request whitepaper.
+    operationId: request_whitepaper
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - firstName
+              - lastName
+              - email
+              - phone
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+              phone:
+                type: string
+    responses:
+      '200':
+        ref: '../_responses.yaml#/200'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - empty first name
+                    - empty last name
+                    - empty email
+                    - Invalid Email
+                    - empty phone
+samples:
+  post:
+    tags:
+      - Default
+    summary: >-
+      Send request samples
+    description: >-
+      Send request samples.
+    operationId: request_samples
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            ref: '../_schemas.yaml#/samplesRequest'
+    responses:
+      '200':
+        ref: '../_responses.yaml#/200'
+      '400':
+        ref: '../_responses.yaml#/samples400'
+registerToken:
+  post:
+    tags:
+      - Default
+    summary: >-
+      Register token for push notifications
+    description: >-
+      Register android and iOS application token for push notifications.
+    operationId: register_token
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - credit_card_id
+            properties:
+              device_token:
+                type: string
+              platform:
+                type: string
+              token:
+                type: string
+                description: for authorization by token
+    responses:
+      '200':
+        res$: '../_responses.yaml#/200'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - invalid device token
+                    - cannot identify user
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 500
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - "server error: [SNS error detail]"

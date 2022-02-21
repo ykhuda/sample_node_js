@@ -1,0 +1,124 @@
+id:
+  get:
+    summary: Get a gift card by id.
+    tags:
+      - Gift Card
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    giftCard:
+                      $ref: '../_schemas.yaml#/giftCard'
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  put:
+    summary: Update a gift card by id.
+    tags:
+      - Gift Card
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../_schemas.yaml#/giftCardImg'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Gift card has been updated.
+      '404':
+        $ref: '../_responses.yaml#/model404'
+  delete:
+    summary: Delete a gift card by id.
+    tags:
+      - Gift Card
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+      - $ref: '../_schemas.yaml#/idParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      enum:
+                        - Gift cards with id :id has been deleted.
+giftCards:
+  post:
+    summary: Create a new Gift card.
+    tags:
+      - Gift Card
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema: 
+            $ref: '../_schemas.yaml#/giftCardImg'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum:
+                    - Successfully added a new Gift card.
+                id:
+                  type: integer
+  get:
+    summary: Get all Gift cards.
+    tags:
+      - Gift Card
+    parameters:
+      - $ref: '../_schemas.yaml#/userCookies'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    rows:
+                      type: array
+                      items:
+                        $ref: '../_schemas.yaml#/giftCard'
+                    page:
+                      type: integer
+                    total:
+                      type: integer

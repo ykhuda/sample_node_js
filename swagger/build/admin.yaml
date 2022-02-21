@@ -1,0 +1,4217 @@
+openapi: 3.0.0
+info:
+  title: Project_name API
+  description: This is an API documentation for a Project_name Admin.
+  version: 1.0.0
+servers:
+  - url: 'https://Project_name.com/api/v1/admin'
+    description: Test server
+  - url: 'http://localhost:3000/api/v1/admin'
+    description: Development server
+paths:
+  '/qa/manifests/{id}/submit':
+    put:
+      summary: Send to process selected redo orders or complete the manifest.
+      tags:
+        - QA
+      parameters:
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rejectedOrderIds:
+                  description: An array of redo ids. The orders and its children will be copied.
+                  $ref: '#/paths/~1qa~1manifests~1%7Bid%7D~1submit/put/requestBody/content/application~1json/schema/properties/skippedOrderIds'
+                skippedOrderIds:
+                  description: 'The orders will be deleted from the manifest, manifest_id will be set to null.'
+                  type: array
+                  items:
+                    id:
+                      type: integer
+                  example:
+                    - 40031
+                    - 40030
+                    - 40059
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Manifest successfully completed. Accepted: :totalAccepted, Rejected: :totalRejected.'
+                        example: 'Manifest successfully completed. Accepted: 4, Rejected: 2'
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - There are some incompleted or already rejected orders
+                      incompletedOrderIds:
+                        description: An array of orders without 'complete' status
+                        $ref: '#/paths/~1qa~1manifests~1%7Bid%7D~1submit/put/requestBody/content/application~1json/schema/properties/skippedOrderIds'
+                      noWaitingOrderIds:
+                        description: An array of orders without 'waiting' qa_status
+                        $ref: '#/paths/~1qa~1manifests~1%7Bid%7D~1submit/put/requestBody/content/application~1json/schema/properties/skippedOrderIds'
+                      continueProcessOrderIds:
+                        description: An array of redo orders
+                        $ref: '#/paths/~1qa~1manifests~1%7Bid%7D~1submit/put/requestBody/content/application~1json/schema/properties/skippedOrderIds'
+        '400':
+          $ref: '#/paths/~1qa~1manifests~1%7Bid%7D/get/responses/400'
+        '404':
+          $ref: '#/paths/~1qa~1manifests~1%7Bid%7D/get/responses/404'
+  '/qa/manifests/{id}/review':
+    put:
+      summary: Assigns the manifest and it's orders to the employee.
+      tags:
+        - QA
+      parameters:
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Manifest # :mId is assigned to employee # :id'
+                example:
+                  message: 'Manifest # 1914 is assigned to employee # 24'
+        '400':
+          $ref: '#/paths/~1qa~1manifests~1%7Bid%7D/get/responses/400'
+        '404':
+          $ref: '#/paths/~1qa~1manifests~1%7Bid%7D/get/responses/404'
+  '/qa/manifests/{id}':
+    get:
+      summary: Check the manifest and show its incomplete and complete orders.
+      tags:
+        - QA
+      parameters:
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incompletedOrderIds:
+                    type: array
+                    description: An orders without 'complete' status
+                  completedOrderIds:
+                    type: array
+                    description: An orders with 'complete' status
+                example:
+                  incompletedOrderIds:
+                    - 40034
+                    - 40035
+                    - 40051
+                  completedOrderIds:
+                    - 40021
+                    - 40025
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Error in the entered manifest ID - check and enter the manifest ID again.
+                      - Someone removed the orders from the manifest.
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 404
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Manifest not found.
+                      - Manifest has already been canceled by someone.
+                      - Manifest has already been completed by someone.
+                      - Invalid manifest status.
+    delete:
+      summary: Remove orders from the manifest to continue processing orders.
+      tags:
+        - QA
+      parameters:
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                    - 40034
+                    - 40035
+                    - 40051
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Orders # :orderIds has been removed from the process.'
+                example:
+                  message: 'Orders # 40034, 40035, 40051 has been removed from the process.'
+  /auth/login:
+    get:
+      summary: Login page.
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'You are on the login page. Please log in or register. App version is :version'
+    post:
+      summary: Sign in form.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: username or email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A user's data
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 401
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Login data is invalid.
+                      - Password is incorrect.
+                      - Verizon user.
+                      - Your account is not activated. Contact Admin to activate your account.
+                      - Your account is blocked.
+  /auth/logout:
+    post:
+      summary: Log out a user. Destroy session.
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logout:
+                    type: boolean
+                    enum:
+                      - true
+  /auth/registration:
+    post:
+      summary: Sign up form
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  register:
+                    type: boolean
+                    enum:
+                      - true
+                  message:
+                    type: string
+                    enum:
+                      - Thank you for your registration. Contact Admin to activate your account.
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 401
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Username field is required.
+                      - Email field is required.
+                      - Password is required.
+                      - ':login is already used.'
+                      - ':email is already used.'
+  /auth/reset:
+    post:
+      summary: Generate reset token and send it to the admin's email
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - password
+                  message:
+                    type: string
+                    enum:
+                      - Please check your email. An instructions has been sent to your email address.
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 401
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Email is required.
+                      - Bad credentials.
+  '/auth/reset/:token':
+    get:
+      summary: Reset token
+      tags:
+        - Auth
+      parameters:
+        - token: null
+          in: path
+          name: hash
+          description: A reset token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+    put:
+      summary: Confirm reset password.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                passwordConfirmation:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Success. Your password has been changed.
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 401
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Password is required for this action.
+                      - Passwords you\'ve provided doesn\'t match.
+                      - Bad token.
+                      - Reset token is expired.
+  '/profile/{id}':
+    get:
+      summary: Get an employee info and a profile fields
+      tags:
+        - Profile
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+  '/profile/{id}/changePass':
+    put:
+      summary: Change employee's password
+      tags:
+        - Profile
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - Password has been changed
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    description: error
+                  message:
+                    type: string
+                    enum:
+                      - Not all required data is provided.
+                      - Password is too short. Minimum 4 characters.
+                      - Passwords you\'ve provided doesn\'t match.
+  '/profile/{id}/edit':
+    put:
+      summary: Change employee's profile info
+      tags:
+        - Profile
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Changes have been saved.
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    description: error
+                  message:
+                    type: string
+                    enum:
+                      - You\'ve provided a wrong data.
+                      - ':username is already used.'
+                      - ':email is already used.'
+  '/addresses/{id}':
+    get:
+      summary: Get an address by id.
+      tags:
+        - Address
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        $ref: '#/paths/~1addresses/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update an address by id.
+      tags:
+        - Address
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1addresses/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Address has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete an address by id.
+      tags:
+        - Address
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Address has been deleted.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /addresses:
+    post:
+      summary: Create a new address.
+      tags:
+        - Address
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                user_id:
+                  type: integer
+                order_id:
+                  type: integer
+                date_updated:
+                  type: string
+                  format: date-time
+                basket_id:
+                  type: integer
+                country:
+                  type: string
+                country_id:
+                  type: integer
+                birthday:
+                  type: string
+                address_id:
+                  type: integer
+                ext_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Address has been created.
+                  id:
+                    type: integer
+    get:
+      summary: Get all addresses.
+      tags:
+        - Address
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1addresses/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer'
+  '/client_groups/{id}':
+    get:
+      summary: Get a group by id.
+      tags:
+        - User Group
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      group:
+                        $ref: '#/paths/~1client_groups/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a group by id.
+      tags:
+        - User Group
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1client_groups/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Group has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a group by id.
+      tags:
+        - User Group
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Group has been deleted.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /client_groups:
+    post:
+      summary: Create a new group.
+      tags:
+        - User Group
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit_categories:
+                  type: integer
+                title:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new group.
+                  id:
+                    type: integer
+    get:
+      summary: Get all groups.
+      tags:
+        - User Group
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1client_groups/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: intege'
+  '/countries/{id}':
+    get:
+      summary: Get a country by id.
+      tags:
+        - Country
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      country:
+                        $ref: '#/paths/~1countries/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a country by id.
+      tags:
+        - Country
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1countries/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Country has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a country by id.
+      tags:
+        - Country
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Country with id :id has been deleted.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /countries:
+    post:
+      summary: Create a new country.
+      tags:
+        - Country
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                aliases:
+                  type: string
+                name:
+                  type: string
+                delivery_cost:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new country.
+                  id:
+                    type: integer
+    get:
+      summary: Get all countries.
+      tags:
+        - Country
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1countries/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/denominations/{id}':
+    get:
+      summary: Get a denomination by id.
+      tags:
+        - Denomination
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      coutry:
+                        $ref: '#/paths/~1denominations/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a denomination by id.
+      tags:
+        - Denomination
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1denominations/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Denomination has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a denomination by id.
+      tags:
+        - Denomination
+      properties:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Denomination with id :id has been deleted.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /denominations:
+    post:
+      summary: Create a new denomination.
+      tags:
+        - Denomination
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: integer
+                gcard_id:
+                  type: integer
+                nominal:
+                  type: number
+                  format: float
+                price:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new denomination.
+                  id:
+                    type: integer
+    get:
+      summary: Get all denominations.
+      tags:
+        - Denomination
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1denominations/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/holidays/{id}':
+    get:
+      summary: Get a holiday by id.
+      tags:
+        - Holiday
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      coutry:
+                        $ref: '#/paths/~1holidays/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a holiday by id.
+      tags:
+        - Holiday
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1holidays/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Holiday has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a holiday by id.
+      tags:
+        - Holiday
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Holiday with id :id has been deleted.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /holidays:
+    post:
+      summary: Create a new holiday.
+      tags:
+        - Holiday
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new holiday.
+                  id:
+                    type: integer
+    get:
+      summary: Get all holidays.
+      tags:
+        - Holiday
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1holidays/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/tax_codes/{id}':
+    get:
+      summary: Get a tax code by id.
+      tags:
+        - Tax Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      taxCode:
+                        $ref: '#/paths/~1tax_codes/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a tax code by id.
+      tags:
+        - Tax Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1tax_codes/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Tax code has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /tax_codes:
+    post:
+      summary: Create a new tax code.
+      tags:
+        - Tax Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                tax_code:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new tax code.
+                  id:
+                    type: integer
+    get:
+      summary: Get all tax codes.
+      tags:
+        - Tax Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      taxCodes:
+                        type: object
+                        properties:
+                          rows:
+                            type: array
+                            items:
+                              $ref: '#/paths/~1tax_codes/post/requestBody/content/application~1json/schema'
+                          page:
+                            type: integer
+                          total:
+                            type: integer
+  '/discount_codes/{id}':
+    get:
+      summary: Get a discount code by id.
+      tags:
+        - Discount Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      discountCode:
+                        $ref: '#/paths/~1discount_codes/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a discount code by id.
+      tags:
+        - Discount Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1discount_codes/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    message:
+                      type: string
+                      enum:
+                        - Discount code has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a discount code by id.
+      tags:
+        - Discount Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    message:
+                      type: string
+                      enum:
+                        - 'Discount codes with id :id has been deleted.'
+  /discount_codes:
+    post:
+      summary: Create a new discount code.
+      tags:
+        - Discount Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                credit:
+                  type: integer
+                  format: float
+                count:
+                  type: integer
+                group_id:
+                  type: integer
+                type:
+                  type: string
+                  enum:
+                    - normal
+                    - cards_only
+                invoiced:
+                  type: integer
+                users_limit:
+                  type: integer
+                domain_regex:
+                  type: string
+                code:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    message:
+                      type: string
+                      enum:
+                        - Successfully added a new discount code.
+                    id:
+                      type: integer
+    get:
+      summary: Get all discount codes.
+      tags:
+        - Discount Code
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1discount_codes/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/discount_rules/{id}':
+    get:
+      summary: Get a discount rule by id.
+      tags:
+        - Discount Rule
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      discountRule:
+                        $ref: '#/paths/~1discount_rules/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a discount rule by id.
+      tags:
+        - Discount Rule
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1discount_rules/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Discount rule has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a discount rule by id.
+      tags:
+        - Discount Rule
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Discount rules with id :id has been deleted.'
+  /discount_rules:
+    post:
+      summary: Create a new discount rule.
+      tags:
+        - Discount Rule
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_group_id:
+                  type: integer
+                min_number:
+                  type: integer
+                discount:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new discount rule.
+                  id:
+                    type: integer
+    get:
+      summary: Get all discount rules.
+      tags:
+        - Discount Rule
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1discount_rules/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/share_options/{id}':
+    get:
+      summary: Get a share option by id.
+      tags:
+        - Share Option
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  coutry:
+                    $ref: '#/paths/~1share_options/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a share option by id.
+      tags:
+        - Share Option
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1share_options/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Share Options has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a share option by id.
+      tags:
+        - Share Option
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Share Options with id :id has been deleted.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  /share_options:
+    post:
+      summary: Create a new share options.
+      tags:
+        - Share Option
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                text:
+                  type: string
+                link:
+                  type: string
+                link_android:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new share options.
+                  id:
+                    type: integer
+    get:
+      summary: Get all share options.
+      tags:
+        - Share Option
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1share_options/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/coupons/{id}':
+    get:
+      summary: Get a coupon by id.
+      tags:
+        - Coupon
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      coupon:
+                        $ref: '#/paths/~1coupons/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a coupon by id.
+      tags:
+        - Coupon
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1coupons/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - coupon has been updated.
+        '400':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Coupon with code (:code) already exists.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a coupon by id.
+      tags:
+        - Coupon
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'coupons with id :id has been deleted.'
+  /coupons:
+    post:
+      summary: Create a new coupon.
+      tags:
+        - Coupon
+      properties:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                credit:
+                  type: number
+                  format: float
+                used:
+                  type: integer
+                expiration_date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new coupon.
+                  id:
+                    type: integer
+        '400':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Coupon with code (:code) already exists.'
+    get:
+      summary: Get all coupons.
+      tags:
+        - Coupon
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1coupons/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/subscriptions/{id}':
+    get:
+      summary: Get a subscription by id.
+      tags:
+        - Subscription
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      subscription:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            enum:
+                              - ACTIVE
+                              - DRAFT
+                          sort:
+                            type: integer
+                          name:
+                            type: string
+                          period:
+                            type: integer
+                          is_best_value:
+                            type: integer
+                          description:
+                            type: string
+                          plan_icon:
+                            type: string
+                          color:
+                            type: string
+                          cost_description:
+                            type: string
+                          taxable_amount:
+                            type: number
+                            format: float
+                          tax_exempt:
+                            type: integer
+                          fee:
+                            type: number
+                            format: float
+                          credit2:
+                            type: number
+                            format: float
+                          discount:
+                            type: number
+                            format: float
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a subscription by id.
+      tags:
+        - Subscription
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1subscriptions/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Subscription plan has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a subscription by id.
+      tags:
+        - Subscription
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Subscription plan with id :id has been deleted.'
+  /subscriptions:
+    post:
+      summary: Create a new subscription.
+      tags:
+        - Subscription
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - ACTIVE
+                    - DRAFT
+                sort:
+                  type: integer
+                employee_id:
+                  type: integer
+                updated_at:
+                  type: string
+                  format: date-time
+                created_at:
+                  type: string
+                  format: date-time
+                name:
+                  type: string
+                period:
+                  type: integer
+                is_best_value:
+                  type: integer
+                description:
+                  type: string
+                plan_icon:
+                  type: string
+                color:
+                  type: string
+                cost_description:
+                  type: string
+                taxable_amount:
+                  type: number
+                  format: float
+                tax_exempt:
+                  type: integer
+                fee:
+                  type: number
+                  format: float
+                credit2:
+                  type: number
+                  format: float
+                discount:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Subscription plan has been created.
+                  id:
+                    type: integer
+    get:
+      summary: Get all subscriptions.
+      tags:
+        - Subscription
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1subscriptions~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/properties/subscription'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/twilio_requests/{id}':
+    get:
+      summary: Get a twilio requests by id.
+      tags:
+        - Twilio Request
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      twilioRequest:
+                        $ref: '#/paths/~1twilio_requests/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a twilio requests by id.
+      tags:
+        - Twilio Request
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1twilio_requests/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Twilio request has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a twilio requests by id.
+      tags:
+        - Twilio Request
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Twilio requests with id :id has been deleted.'
+  /twilio_requests:
+    post:
+      summary: Create a new twilio request.
+      tags:
+        - Twilio Request
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                request:
+                  type: string
+                created_at:
+                  type: string
+                  format: date-time
+                request_ip:
+                  type: string
+                carrier_name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new twilio request.
+                  id:
+                    type: integer
+    get:
+      summary: Get all twilio requests.
+      tags:
+        - Twilio Request
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1twilio_requests/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/gift_cards/{id}':
+    get:
+      summary: Get a gift card by id.
+      tags:
+        - Gift Card
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      giftCard:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                        required:
+                          - name
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a gift card by id.
+      tags:
+        - Gift Card
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1gift_cards/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Gift card has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a gift card by id.
+      tags:
+        - Gift Card
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Gift cards with id :id has been deleted.'
+  /gift_cards:
+    post:
+      summary: Create a new Gift card.
+      tags:
+        - Gift Card
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                file:
+                  $ref: '#/paths/~1fonts/post/requestBody/content/application~1json/schema/properties/image'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new Gift card.
+                  id:
+                    type: integer
+    get:
+      summary: Get all Gift cards.
+      tags:
+        - Gift Card
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1gift_cards~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/properties/giftCard'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/fonts/{id}':
+    get:
+      summary: Get a font by id.
+      tags:
+        - Font
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - type: integer
+          name: id
+          in: path
+          required: true
+          description: Model id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      font:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          user_groups:
+                            $ref: '#/paths/~1client_groups/post/requestBody/content/application~1json/schema'
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 404
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - 'A record in :model table with :id id doesn''t exist.'
+                example:
+                  httpCode: 404
+                  status: error
+                  message: A record in manifests table with 40023 id doesn't exist.
+    put:
+      summary: Update a font by id.
+      tags:
+        - Font
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1fonts/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Font has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a font by id.
+      tags:
+        - Font
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                          - 'Fonts with id :id has been deleted.'
+  /fonts:
+    post:
+      summary: Create a new font.
+      tags:
+        - Font
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                font_file:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    size:
+                      type: integer
+                    buffer:
+                      type: string
+                      format: binary
+                    status:
+                      type: string
+                      enum:
+                        - removed
+                  required:
+                    - name
+                    - buffer
+                image:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    size:
+                      type: integer
+                    thumbUrl:
+                      type: string
+                      format: byte
+                    status:
+                      type: string
+                      enum:
+                        - removed
+                  required:
+                    - name
+                    - thumbUrl
+                font_eot_file:
+                  $ref: '#/paths/~1fonts/post/requestBody/content/application~1json/schema/properties/font_file'
+                user_groups:
+                  $ref: '#/paths/~1batch_orders~1discard/post/requestBody/content/application~1json/schema/properties/orderIds'
+                label:
+                  type: string
+                sort:
+                  type: integer
+                visible:
+                  type: integer
+                line_spacing:
+                  type: number
+                  format: float
+                font_name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new font.
+                  id:
+                    type: integer
+    get:
+      summary: Get all Fonts.
+      tags:
+        - Font
+      parameters:
+        - in: cookie
+          name: user
+          schema:
+            type: object
+            required: true
+            properties:
+              id:
+                type: integer
+              login:
+                type: string
+              password:
+                type: string
+              model:
+                type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/properties/font'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/social_sharing/{id}':
+    get:
+      summary: Get a social sharing by id.
+      tags:
+        - Social sharing
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      social_sharing:
+                        $ref: '#/paths/~1social_sharing/post/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a social sharing by id.
+      tags:
+        - Social sharing
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1social_sharing/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Social sharing has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a social sharing by id.
+      tags:
+        - Social sharing
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Social sharings with id :id has been deleted.'
+  /social_sharing:
+    post:
+      summary: Create a new Social sharing.
+      tags:
+        - Social sharing
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                network:
+                  type: string
+                request_ip:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new social sharing.
+                  id:
+                    type: integer
+    get:
+      summary: Get all Social sharings.
+      tags:
+        - Social sharing
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1social_sharing/post/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  /shipping/methods:
+    get:
+      tags:
+        - Shipping
+      summary: Get shipping methods list
+      description: Get shipping methods list
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: Shipping methods list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/paths/~1shipping~1methods/put/requestBody/content/application~1json/schema'
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+    post:
+      summary: Create a new shipping method.
+      tags:
+        - Shipping
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method_name:
+                  type: string
+                  example: DO NOT STAMP. SEAL AND SHIP
+                method_label:
+                  type: string
+                  example: 'Written, addressed, stuffed, sealed'
+                discount:
+                  type: string
+                  example: $0.10
+                add_postage_fee:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                show_options:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                status:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                check_recipient_address:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                check_return_address:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  new:
+                    $ref: '#/paths/~1shipping~1methods/put/requestBody/content/application~1json/schema'
+        '401':
+          description: INVALID_DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - method name is required.
+                      - method label is required.
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+    put:
+      summary: Update shipping method.
+      tags:
+        - Shipping
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                method_name:
+                  type: string
+                  example: DO NOT STAMP. SEAL AND SHIP
+                method_label:
+                  type: string
+                  example: 'Written, addressed, stuffed, sealed'
+                discount:
+                  type: string
+                  example: $0.10
+                add_postage_fee:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                show_options:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                status:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                check_recipient_address:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+                check_return_address:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Shipping method with id {id} has been updated.'
+        '401':
+          description: INVALID_DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - method name is required.
+                      - method label is required.
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+  '/shipping/methods/{id}':
+    get:
+      tags:
+        - Shipping
+      summary: Get shipping method by id
+      description: Get shipping method by id
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: Shipping method by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1shipping~1methods/put/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1shipping~1rates~1%7Bid%7D/get/responses/404'
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+    delete:
+      tags:
+        - Shipping
+      summary: Delete shipping method by id
+      description: Delete shipping method by id
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: Delete method by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Shipping method with id {id} has been deleted.'
+        '404':
+          $ref: '#/paths/~1shipping~1rates~1%7Bid%7D/get/responses/404'
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+  /shipping/rates:
+    get:
+      tags:
+        - Shipping
+      summary: Get shipping rates list
+      description: Get shipping rates list
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: Shipping methods list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/paths/~1shipping~1rates/put/requestBody/content/application~1json/schema'
+        '440':
+          description: SESSION_ERROR
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 440
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Session has been expired.
+                      - Api token has been expired. You have to re-generate the token.
+                example:
+                  httpCode: 440
+                  status: error
+                  message: Session has been expired.
+    post:
+      summary: Create a new shipping rate.
+      tags:
+        - Shipping
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Ground
+                base:
+                  type: integer
+                  example: $10
+                per_card_fee:
+                  type: string
+                  example: $0.10
+                minimum_fee:
+                  type: integer
+                  example: $10
+                sort_order:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  new:
+                    $ref: '#/paths/~1shipping~1rates/put/requestBody/content/application~1json/schema'
+        '401':
+          description: INVALID_DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - name is required.
+                      - base is required.
+                      - plus price pre card is required.
+                      - minimum fee is required.
+                      - sort order is required.
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+    put:
+      summary: Update shipping rate.
+      tags:
+        - Shipping
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: Ground
+                base:
+                  type: integer
+                  example: $10
+                per_card_fee:
+                  type: string
+                  example: $0.10
+                minimum_fee:
+                  type: integer
+                  example: $10
+                sort_order:
+                  type: integer
+                  enum:
+                    - 1
+                    - 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Shipping rate with id {id} has been updated.'
+        '401':
+          description: INVALID_DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - id is required.
+                      - name is required.
+                      - base is required.
+                      - plus price pre card is required.
+                      - minimum fee is required.
+                      - sort order is required.
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+  '/shipping/rates/{id}':
+    get:
+      tags:
+        - Shipping
+      summary: Get shipping rate by id
+      description: Get shipping rate by id
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: Shipping rate by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1shipping~1rates/put/requestBody/content/application~1json/schema'
+        '404':
+          description: INVALID_DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - id not set.
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+    delete:
+      tags:
+        - Shipping
+      summary: Delete shipping rate by id
+      description: Delete shipping rate by id
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: Delete rate by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Shipping rate with id {id} has been deleted.'
+        '404':
+          $ref: '#/paths/~1shipping~1rates~1%7Bid%7D/get/responses/404'
+        '440':
+          $ref: '#/paths/~1shipping~1rates/get/responses/440'
+  /batch_orders/paid:
+    get:
+      summary: Find grouped orders by card id.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          cnt:
+                            type: integer
+                          taxonomy:
+                            type: string
+                          category_id:
+                            type: integer
+                          closed_width:
+                            type: number
+                            format: float
+                          closed_height:
+                            type: number
+                            format: float
+  '/batch_orders/generatePdf/{id}':
+    get:
+      summary: Generate a card images in PDF by id.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          $ref: '#/paths/~1batch_orders~1manifest/get/responses/200'
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - Size of card is not set.
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 404
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - 'Card with id (:id) doesn''t exist.'
+                      - Сould not get front image.
+                      - Сould not copy front image.
+                      - Сould not copy back image.
+  /batch_orders/manifest:
+    get:
+      summary: Generate a manifest.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+        - orderIds:
+            type: string
+            name: orderIds
+            in: query
+            required: true
+        - isNewManifest:
+            type: boolean
+            in: query
+            name: isNewManifest
+        - cut:
+            type: boolean
+            name: cut
+            in: query
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: base64
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - No orders.
+                      - 'Cannot find img for card with id (:card_id)'
+                      - 'Forced to update old Manifest, but there is no manifest with status "new".'
+  /batch_orders/in_work:
+    get:
+      summary: Find all orders with status 'in_work'.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rows:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      countOrdersWithLabels:
+                        type: integer
+                      ordersInWork:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            card:
+                              $ref: '#/paths/~1batch_orders~1paid/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                            orders:
+                              $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+  /batch_orders:
+    get:
+      summary: Find all orders by card id.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            user:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                id:
+                                  type: integer
+                            ups_shipments:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                            denomination:
+                              type: object
+                              properties:
+                                nominal:
+                                  type: number
+                                  format: float
+                                id:
+                                  type: integer
+                                gcard:
+                                  type: object
+                                  properties:
+                                    name:
+                                      type: string
+                            inserts:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                  price:
+                                    type: number
+                                    format: float
+                                  name:
+                                    type: string
+                              to:
+                                type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                      - order_to
+                                  name:
+                                    type: string
+                                  country_id:
+                                    type: integer
+                              from:
+                                type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                      - order_from
+                                  name:
+                                    type: string
+                                  country_id:
+                                    type: integer
+                              children:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    user:
+                                      type: object
+                                      properties:
+                                        name:
+                                          type: string
+                                        id:
+                                          type: integer
+                                    denomination:
+                                      type: object
+                                      properties:
+                                        nominal:
+                                          type: number
+                                          format: float
+                                        id:
+                                          type: integer
+                                        gcard:
+                                          type: object
+                                          properties:
+                                            name:
+                                              type: string
+                                    inserts:
+                                      type: array
+                                      items:
+                                        type: object
+                                        properties:
+                                          id:
+                                            type: integer
+                                          price:
+                                            type: number
+                                            format: float
+                                          name:
+                                            type: string
+                                          to:
+                                            $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows/items/properties/inserts/to'
+                                          from:
+                                            $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows/items/properties/inserts/from'
+  /batch_orders/process:
+    post:
+      summary: Process orders in work.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rowsData:
+                  type: object
+                  properties:
+                    employeeId:
+                      type: integer
+                    rows:
+                      type: array
+                      items:
+                        type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  staticMessages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - info
+                            - error
+                            - warning
+                        message:
+                          type: string
+                          enum:
+                            - 'Warning! The following orders were not attached to the employee, as either they are already attached to another employee or do not exist: :ids'
+                            - No orders available to be processed!
+                            - Please complete or discard current orders before taking more orders
+                            - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+                  count:
+                    type: integer
+                  countOrdersWithLabels:
+                    type: integer
+                  ordersInWork:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        card:
+                          $ref: '#/paths/~1batch_orders~1paid/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                        orders:
+                          $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                  message:
+                    type: string
+                    enum:
+                      - ':ids orders processed to status in_work.'
+  /batch_orders/check:
+    get:
+      summary: Check in work orders and send back a worning.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      count:
+                        type: integer
+                      countOrdersWithLabels:
+                        type: integer
+                      ordersInWork:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            card:
+                              $ref: '#/paths/~1batch_orders~1paid/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                            orders:
+                              $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                  - type: object
+                    properties:
+                      count:
+                        type: integer
+                      countOrdersWithLabels:
+                        type: integer
+                      ordersInWork:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            card:
+                              $ref: '#/paths/~1batch_orders~1paid/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                            orders:
+                              $ref: '#/paths/~1batch_orders/get/responses/200/content/application~1json/schema/properties/data/properties/rows'
+                      staticMessages:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1batch_orders~1process/post/responses/200/content/application~1json/schema/properties/staticMessages/items'
+  /batch_orders/complete:
+    post:
+      summary: Complete previously selected orders.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  $ref: '#/paths/~1batch_orders~1manifest/get/parameters/2/orderIds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - ':ids order(s) has been completed, :success web hooks succeeded, :errors web hooks failed, :discarded order(s) has been discarded, :manifests manifest(s) has been canceled'
+                      - ':discarded order(s) has been discarded, :manifests manifest(s) has been canceled'
+                  staticMessages:
+                    type: string
+                    enum:
+                      - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+                  completedOrders:
+                    type: array
+                    items:
+                      type: object
+                  discardedOrders:
+                    type: array
+                    items:
+                      type: object
+  /batch_orders/discard:
+    post:
+      summary: Discard previously selected orders.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  type: array
+                  items:
+                    type: integer
+                confirmed:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - ':ids order(s) has been discarded'
+                      - manifest(s) has been canceled
+                  staticMessages:
+                    type: string
+                    enum:
+                      - 'Order(s) status has been changed already or they were assigned to another employee or do not exist: :ids'
+                      - 'Manifests with these IDs will be canceled: :ids'
+                  discardedOrders:
+                    type: array
+                    items:
+                      type: object
+  /batch_orders/docx/notes:
+    get:
+      summary: Generate a docx.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - orderIds:
+            $ref: '#/paths/~1batch_orders~1manifest/get/parameters/2/orderIds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+  /batch_orders/labels/print:
+    post:
+      summary: Print labels.
+      tags:
+        - Batch Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  $ref: '#/paths/~1batch_orders~1discard/post/requestBody/content/application~1json/schema/properties/orderIds'
+                employee_id:
+                  type: integer
+      responses:
+        '200':
+          $ref: '#/paths/~1batch_orders~1manifest/get/responses/200'
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - No orders!
+                      - Selected orders without labels!
+  /batch_orders/labels/envelopes:
+    get:
+      summary: Generate a envelopes docx.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - orderIds:
+            $ref: '#/paths/~1batch_orders~1manifest/get/parameters/2/orderIds'
+      responses:
+        '200':
+          $ref: '#/paths/~1batch_orders~1docx~1notes/get/responses/200'
+  /batch_orders/labels/cancel:
+    post:
+      summary: Cancel labels.
+      tags:
+        - Batch Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  $ref: '#/paths/~1batch_orders~1discard/post/requestBody/content/application~1json/schema/properties/orderIds'
+                employee_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - cancel labels ok
+        '400':
+          description: INVALID DATA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum:
+                      - 400
+                    description: Http status code
+                  status:
+                    type: string
+                    enum:
+                      - error
+                  message:
+                    type: string
+                    enum:
+                      - No orders!
+                      - 'Address to is missing in order #:id'
+                      - 'Address to is not in the USA in order #:id'
+                      - 'AddresFrom is missing in order #:id'
+                      - 'State from AddresTo is not valid in order #:id'
+  /batch_orders/labels/generate:
+    post:
+      summary: Generate labels.
+      tags:
+        - Batch Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  $ref: '#/paths/~1batch_orders~1discard/post/requestBody/content/application~1json/schema/properties/orderIds'
+                employee_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - cancel labels ok
+                  type:
+                    type: string
+                    enum:
+                      - error
+                  orderId:
+                    type: integer
+                  text:
+                    type: string
+                required:
+                  - message
+  /batch_orders/labels/status:
+    get:
+      summary: Get a labal status.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - details:
+            type: boolean
+            name: details
+            in: query
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      icons:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            img:
+                              type: string
+                            tooltip:
+                              type: string
+                            alt:
+                              type: string
+                      statusMessage:
+                        type: string
+                        enum:
+                          - 'Generating labels :count.'
+                          - 'Errors: :countErrors'
+  /batch_orders/manifest/status:
+    get:
+      summary: Get a manifest status.
+      tags:
+        - Batch Orders
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            enum:
+                              - new
+                              - completed
+                              - canceled
+                          orders:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                          fileLink:
+                            type: string
+                          ile_cutLink:
+                            type: string
+                  - type: object
+                    properties:
+                      data:
+                        type: integer
+                        nullable: true
+  '/notifications/{id}':
+    get:
+      summary: Get a natification by id.
+      tags:
+        - Notification
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      social_sharing:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                          color:
+                            type: string
+                            enum:
+                              - RED
+                              - GREEN
+                          employee_id:
+                            type: integer
+                          status:
+                            type: string
+                            enum:
+                              - ACTIVE
+                              - DRAFT
+                          visible_to_all:
+                            type: integer
+                          visible_to_guest:
+                            type: integer
+                          starts_at:
+                            type: string
+                            format: date-time
+                          ends_at:
+                            type: string
+                            format: date-time
+                          created_at:
+                            type: string
+                            format: date-time
+                          updated_at:
+                            type: string
+                            format: date-time
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a natification by id.
+      tags:
+        - Notification
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1notifications/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Notification has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a natification by id.
+      tags:
+        - Notification
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'Notifications with id :id has been deleted.'
+  /notifications:
+    post:
+      summary: Create a new Notification.
+      tags:
+        - Notification
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                color:
+                  type: string
+                  enum:
+                    - RED
+                    - GREEN
+                status:
+                  type: string
+                  enum:
+                    - ACTIVE
+                    - DRAFT
+                visible_to_all:
+                  type: integer
+                visible_to_guest:
+                  type: integer
+                starts_at:
+                  type: string
+                  format: date-time
+                ends_at:
+                  type: string
+                  format: date-time
+                user_groups:
+                  $ref: '#/paths/~1batch_orders~1discard/post/requestBody/content/application~1json/schema/properties/orderIds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Successfully added a new notification.
+                  id:
+                    type: integer
+    get:
+      summary: Get all notifications.
+      tags:
+        - Notification
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1notifications~1%7Bid%7D/get/responses/200/content/application~1json/schema/properties/data/properties/social_sharing'
+                      page:
+                        type: integer
+                      total:
+                        type: integer
+  '/client_mails/{id}':
+    get:
+      summary: Get a mail by id.
+      tags:
+        - User Mail
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      coutry:
+                        $ref: '#/paths/~1client_mails~1%7Bid%7D/put/requestBody/content/application~1json/schema'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    put:
+      summary: Update a mail by id.
+      tags:
+        - User Mail
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                user_id:
+                  type: integer
+                date_created:
+                  type: string
+                  format: date-time
+                type:
+                  type: integer
+                subject:
+                  type: string
+                message:
+                  type: string
+                htmlmessage:
+                  type: string
+                order_id:
+                  type: integer
+                sent:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - User Mail has been updated.
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+    delete:
+      summary: Delete a mail by id.
+      tags:
+        - User Mail
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'User Mail with id :id has been deleted.'
+        '404':
+          $ref: '#/paths/~1fonts~1%7Bid%7D/get/responses/404'
+  '/client_mails/{id}/resend':
+    put:
+      summary: Resend a user's mail.
+      tags:
+        - User Mail
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+        - $ref: '#/paths/~1fonts~1%7Bid%7D/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Resent.
+  /client_mails:
+    get:
+      summary: Get all user mails.
+      tags:
+        - User Mail
+      parameters:
+        - $ref: '#/paths/~1fonts/get/parameters/0'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rows:
+                        type: array
+                        items:
+                          $ref: '#/paths/~1client_mails~1%7Bid%7D/put/requestBody/content/application~1json/schema'
+                      page:
+                        type: integer
+                      total:
+                        type: integer'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+security:
+  - ApiKeyAuth: []

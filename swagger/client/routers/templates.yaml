@@ -1,0 +1,376 @@
+create:
+  post:
+    tags:
+      - Templates
+    summary: >-
+      Create new template for current user
+    description: >-
+      Create new template for current user
+    operationId: create_template
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - name
+              - message
+            properties:
+              name:
+                type: string
+              message:
+                type: string
+              wishes:
+                type: string
+              signature_id:
+                type: integer
+                description: signature in wishes
+              signature2_id:
+                type: integer
+                description: signature in message
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - message
+            properties:
+              name:
+                type: string
+              message:
+                type: string
+              wishes:
+                type: string
+              signature_id:
+                type: integer
+                description: signature in wishes
+              signature2_id:
+                type: integer
+                description: signature in message
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                template_id:
+                  type: integer
+                  format: int64
+                  example: 17
+                template:
+                  ref: '../_schemas.yaml#/Template'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - name error
+                    - message error
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 500
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - error saving template
+update:
+  post:
+    tags:
+      - Templates
+    summary: >-
+      Update exists user`s template
+    description: >-
+      Update exists user`s template
+    operationId: update_template
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - name
+              - message
+              - template_id
+            properties:
+              template_id:
+                type: integer
+              name:
+                type: string
+              message:
+                type: string
+              wishes:
+                type: string
+              signature_id:
+                type: integer
+                description: signature in wishes
+              signature2_id:
+                type: integer
+                description: signature in message
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                template:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      example: 17
+                    category_id:
+                      type: integer
+                      format: int64
+                      example: 1
+                    name:
+                      type: string
+                      example: Thank You Gift - Missed Attendance
+                    message:
+                      type: string
+                      example: >-
+                        Dear XXX
+                        Thank you so much for the generous gift.  Both XXX and I are sure to use it for years to come.  We are so sorry you weren't able to join us for our special day but we appreciate your thoughtfulness and generosity.  We hope to celebrate with you soon.
+                        All the best
+                        XXXX
+                    wishes:
+                      type: string
+                      nullable: true
+                      example: best rigardz
+                    signature_id:
+                      type: integer
+                      nullable: true
+                      example: 128
+                      description: signature in wishes
+                    signature2_id:
+                      type: integer
+                      nullable: true
+                      example: 109
+                      description: signature in message
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - template id error
+                    - no such template
+                    - access denied
+                    - nothing to update
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 500
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - Save error
+delete:
+  post:
+    tags:
+      - Templates
+    summary: >-
+      Delete user`s template
+    description: >-
+      Delete user`s template
+    operationId: delete_template
+    security:
+      - uidKey: [ ]
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - template_id
+            properties:
+              template_id:
+                type: integer
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - no uid
+                    - template id error
+                    - no such template
+                    - access denied
+list:
+  get:
+    tags:
+      - Templates
+    summary: >-
+      Get list of cards text templates
+    description: >-
+      Get list of cards text templates. Template Categories are managed in admin area. Also user can save custom templates.
+    operationId: list_templates
+    security:
+      - { }
+      - uidKey: [ ]
+    parameters:
+      - name: category_id
+        in: query
+        description: Category ID
+        required: false
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: templates list
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                template:
+                  ref: '../_schemas.yaml#/Template'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - category id error
+view:
+  get:
+    tags:
+      - Templates
+    summary: >-
+      Get card text template details
+    description: >-
+      Get card text template details.
+    operationId: template_details
+    security:
+      - uidKey: [ ]
+    parameters:
+      - name: template_id
+        in: query
+        example: 15
+        description: Template ID
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: detail information about card text template
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 200
+                status:
+                  type: string
+                  example: ok
+                template:
+                  ref: '../_schemas.yaml#/Template'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - access denied
+                    - template id error
+                    - no such template

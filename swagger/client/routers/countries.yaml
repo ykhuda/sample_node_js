@@ -1,0 +1,84 @@
+list:
+  get:
+    summary: Get list of countries
+    tags:
+      - AddressBook
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                countries:
+                  type: array
+                  description: list of countries
+              example:
+                httpCode: 200
+                status: OK
+                countries:
+                  - id: 1
+                    name: United States
+                    delivery_cost: 12.00
+                    aliases: US
+                    states:
+                      - id: 1
+                        short_name: AK
+                        name: Alaska
+listStates:
+  get:
+    summary: Get list of states
+    tags:
+      - AddressBook
+    parameters:
+      - in: query
+        name: country_id
+        required: true
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                httpCode:
+                  type: number
+                  description: example 200
+                status:
+                  type: string
+                  description: example OK
+                states:
+                  type: array
+                  description: list of states
+              example:
+                states:
+                  - id: 1
+                    name: Alaska
+                    short_name: AK
+      '400':
+        description: INVALID DATA
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    enum: 
+                      - 400
+                    description: Http status code
+                  status: 
+                    type: string
+                    description: error
+                  message:
+                    type: string
+                    enum:
+                      - country id error

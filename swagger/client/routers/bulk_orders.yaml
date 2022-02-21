@@ -1,0 +1,75 @@
+parseXls:
+  post:
+    tags:
+      - Bulk Orders
+    summary: >-
+      Parse XLS file with bulk orders
+    description: >-
+      Parse XLS/CSV file with bulk orders. Return orders data, which can be passed with `place_basket` request.
+    operationId: bulk_orders_parse_xls
+    security:
+      - { }
+      - ApiKeyAuth: [ ]
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - cardId
+              - file
+            properties:
+              cardId:
+                type: string
+                description: card id is required for checking message length
+              file:
+                type: string
+                description: XLS/CSV file
+                format: binary
+    responses:
+      '200':
+        description: successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validationData:
+                  type: object
+                  properties:
+                    fileCorrect:
+                      type: boolean
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          row:
+                            type: integer
+                            example: 2
+                          field:
+                            type: string
+                            example: Return Address City
+                          message:
+                            type: string
+                            example: Return Address City cannot be blank
+                data:
+                  $ref: '../_schemas.yaml#/BulkOrderData'
+      '400':
+        description: Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                httpCode:
+                  type: integer
+                  example: 400
+                error:
+                  type: string
+                  description: error description
+                  enum:
+                    - Wrong selected card
+                    - File not selected
+                    - Wrong file
+                    - Cannot process file.
